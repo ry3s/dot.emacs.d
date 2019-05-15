@@ -1,5 +1,9 @@
-;;
-;;; Main Setting:
+;;; package --- Main init file
+;;; Commentary:
+;;; This is my init file
+
+;;; Code:
+
 ;; from straight.el README
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -22,105 +26,76 @@
 
 ;; windows size
 (setq default-frame-alist
-     '(
-       (width . 100)
+     '((width . 100)
        (height . 45)
        ))
-;;透明化
-;; (if window-system (progn
-;;     (set-frame-parameter nil 'alpha 92) ;透明度
-;;     ))
 
-
-;;パッケージ有効化
-;; (package-initialize)
-;; (setq package-archives
-;;       '(("gnu" . "http://elpa.gnu.org/packages/")
-;;         ("melpa" . "http://melpa.org/packages/")
-;;         ("org" . "http://orgmode.org/elpa/")))
-;;(require 'use-package)
-;;------------------------------------------------------------------------------
-;; (custom-set-variables
-;;  ;; custom-set-variables was added by Custom.
-;;  ;; If you edit it by hand, you could mess it up, so be careful.
-;;  ;; Your init file should contain only one such instance.
-;;  ;; If there is more than one, they won't work right.
-;;  '(custom-safe-themes
-;;    (quote
-;;     ("54f2d1fcc9bcadedd50398697618f7c34aceb9966a6cbaa99829eb64c0c1f3ca" default)))
-;;  '(doom-themes-enable-italic t)
-;;  '(doom-thmes-enable-bold t t)
-;;  '(flycheck-clang-language-standard "c++14")
-;;  '(flycheck-gcc-language-standard "c++14")
-;;  '(haskell-stylish-on-save t)
-;;  '(js-indent-level 2)
-;;  '(package-selected-packages
-;;    (quote
-;;     (zenburn-theme dracula-theme yasnippet prop-menu proof-general doom-themes use-package magit projectile intero yaml-mode haskell-mode company-ghc company-ghci yatex json-mode counsel ivy flycheck-elm flycheck elm-mode exec-path-from-shell cargo rust-mode multi-term sml-mode madhat2r-theme company)))
-;;  '(sml-indent-level 2))
-;; (custom-set-faces
-;;  ;; custom-set-faces was added by Custom.
-;;  ;; If you edit it by hand, you could mess it up, so be careful.
-;;  ;; Your init file should contain only one such instance.
-;;  ;; If there is more than one, they won't work right.
-;;  '(doom-modeline-bar ((t (:background "#6272a4")))))
-;;------------------------------------------------------------------------------
 ;;補完
 (use-package company
-    :init
-    (setq company-selection-wrap-around t)
-    :bind
-    (:map company-active-map
+  :init
+  (setq company-selection-wrap-around t)
+  :bind
+  (:map company-active-map
         ("M-n" . nil)
         ("M-p" . nil)
         ("C-n" . company-select-next)
         ("C-p" . company-select-previous)
         ("C-h" . nil))
-    :config
-    (global-company-mode))
+  :config
+  ;; ソート順
+  (setq company-transformers '(company-sort-by-backend-importance))
+  ;; case sensitive に補完
+  (setq company-dabbrev-downcase nil)
+  (setq completion-ignore-case t)
+  (setq company-idle-delay 0)
+  ;;
+  (define-key emacs-lisp-mode-map (kbd "C-M-i") 'company-complete)
+  ;; すべてのバッファで有効にする
+  (global-company-mode))
 
-;; (require 'company)
-;; (global-company-mode) ; 全バッファで有効にする
-;; (setq company-transformers '(company-sort-by-backend-importance)) ;; ソート順
-;; (setq company-minimum-prefix-length 3) ; デフォルトは4
-;; (setq company-idle-delay 0) ; デフォルトは0.5
-;; (setq company-selection-wrap-around t) ; 候補の一番下でさらに下に行こうとすると一番上に戻る
-;; (setq completion-ignore-case t)
-;; (setq company-dabbrev-downcase nil)
-;; (global-set-key (kbd "C-M-i") 'company-complete)
-;; (define-key company-active-map (kbd "C-n") 'company-select-next) ;; C-n, C-pで補完候補を次/前の候補を選択
-;; (define-key company-active-map (kbd "C-p") 'company-select-previous)
-;; (define-key company-search-map (kbd "C-n") 'company-select-next)
-;; (define-key company-search-map (kbd "C-p") 'company-select-previous)
-;; (define-key company-active-map (kbd "C-s") 'company-filter-candidates) ;; C-sで絞り込む
-;; (define-key company-active-map (kbd "C-i") 'company-complete-selection) ;; TABで候補を設定
 ;; (define-key company-active-map [tab] 'company-complete-selection) ;; TABで候補を設定
-;; (define-key company-active-map (kbd "C-f") 'company-complete-selection) ;; C-fで候補を設定
-;; ;; 各種メジャーモードでも C-M-iで company-modeの補完を使う
-;; (define-key emacs-lisp-mode-map (kbd "C-M-i") 'company-complete)
 
-;; ;;flycheck
-;; (add-hook 'after-init-hook #'global-flycheck-mode)
 
-;; ;;ivy configurations
-;; (require 'ivy)
-;; (ivy-mode 1)
-;; (setq ivy-use-virtual-buffers t)
+;; flycheck
+
+(use-package flycheck
+  :init (global-flycheck-mode)
+  :custom
+  (flycheck-clang-language-standard "c++14")
+  (flycheck-gcc-language-standard "c++14"))
+
+(use-package counsel
+  :bind
+  ("M-x" . counsel-M-x)
+  ("C-x C-m" . counsel-M-x)
+  ("C-x C-f" . counsel-find-file))
+
+(use-package ivy
+  :bind
+  ("C-x s" . swiper)
+  ("C-x C-r" . ivy-resume)
+  :config
+  (ivy-mode 1)
+  (setq ivy-use-virtual-buffers nil)
+  (setq ivy-height 30) ;; mini-buffer のサイズ
+  )
+
+
+
+;; ivy configurations
 ;; (setq enable-recursive-minibuffers t)
-;; (setq ivy-height 30) ;; minibufferのサイズを拡大！（重要）
 ;; (setq ivy-extra-directories nil)
 ;; (setq ivy-re-builders-alist
 ;;       '((t . ivy--regex-plus)))
 
-;; ;;counsel configurations
-;; (global-set-key (kbd "M-x") 'counsel-M-x)
-;; (global-set-key (kbd "C-x C-f") 'counsel-find-file) ;; find-fileもcounsel任せ！
+;; counsel configurations
 ;; (defvar counsel-find-file-ignore-regexp (regexp-opt '("./" "../")))
 
 ;;------------------------------------------------------------------------------
 (set-language-environment "Japanese")
 (set-default-coding-systems 'utf-8)
 (set-terminal-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 ;;---------------------------------------------------------------------------
 (add-to-list 'default-frame-alist '(font . "MonacoB-13" ))
@@ -174,7 +149,8 @@
 ;; カッコの自動対応
 (electric-pair-mode 1)
 ;;shellの設定を引き継ぐ
-;;(exec-path-from-shell-initialize)
+(use-package exec-path-from-shell
+  :config (exec-path-from-shell-initialize))
 ;;最後に改行を入れる
 (setq require-final-newline t)
 ;;行末の空白を表示
@@ -188,26 +164,14 @@
 (global-set-key "\C-x\C-b" 'buffer-menu)
 
 ;; cc mode settings
-(use-package cc-mode)
+(use-package cc-mode
+  :config
+  (setq c-default-style "k&r")
+  (c-toggle-hungry-state 1)
+  (setq c-basic-offset 4
+        indent-tabs-mode nil))
 
-;; Kernighan & Ritche Style
-(setq c-default-style "k&r")
-;;;; BSキーを賢くする。
-;;;; インデント幅は4、タブはスペースに変換
-;; (add-hook 'c-mode-common-hook
-;; 		      '(lambda ()
-;; 			       (progn
-;; 			         (c-toggle-hungry-state 1)
-;; 			         (setq c-basic-offset 4 indent-tabs-mode nil))))
 
-;;;; .hppをC++の拡張子とする。
-;; (setq auto-mode-alist
-;; 	    (append
-;; 	     '(("\\.hpp$" . c++-mode)
-;; 		     ) auto-mode-alist))
-;; shellの設定を引き継ぐ
-;; (exec-path-from-shell-initialize)
-;;------------------------------------------------------------------------------
 ;; ocaml merlin
  (push "<SHARE_DIR>/emacs/site-lisp" load-path) ; directory containing merlin.el
  ;;(setq merlin-command "<BIN_DIR>/ocamlmerlin")  ; needed only if ocamlmerlin not already in your PATH
@@ -222,26 +186,14 @@
 (autoload 'tuareg-run-ocaml "tuareg" "Run an inferior OCaml process." t)
 (autoload 'ocamldebug "ocamldebug" "Run the OCaml debugger." t)
 
-;;------------------------------------------------------------------------------
-;;coq proof general
-;;(setq auto-mode-alist (cons '("\\.v$" . coq-mode) auto-mode-alist))
-;; (autoload 'coq-mode "coq" "Major mode for editing Coq vernacular." t)
+
 ;; Proof General
 (load "~/.emacs.d/lisp/PG/generic/proof-site")
-;;--------------------------------------------------------------------
-
-;; ## added by OPAM user-setup for emacs / base ## 56ab50dc8996d2bb95e7856a6eddb17b ## you can edit, but keep this line
-;;(require 'opam-user-setup "~/.emacs.d/opam-user-setup.el")
-;; ## end of OPAM user-setup addition for emacs / base ## keep this line
 
 ;; haskell intero
-;; (package-install 'intero)
-;; (add-hook 'haskell-mode-hook 'intero-mode)
-
-;; ;; yaml-mode
-;; (require 'yaml-mode)
-;; (add-to-list 'auto-mode-alist '("\\.ya?ml$" . yaml-mode))
-;; (define-key yaml-mode-map "\C-m" 'newline-and-indent)
+(use-package intero
+  :config (add-hook 'haskell-mode-hook 'intero-mode)
+  :custom (haskell-stylish-on-save t))
 
 ;; yasnippet
 (use-package yasnippet
@@ -256,3 +208,9 @@
   (yas-global-mode 1)
   ;;(setq yas-prompt-functions '(yas-ido-prompt))
   )
+
+(use-package dashboard
+  :config
+  (dashboard-setup-startup-hook))
+
+;; end of file
