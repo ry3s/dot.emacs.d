@@ -213,4 +213,8 @@
   :config
   (dashboard-setup-startup-hook))
 
+(use-package hungry-delete
+  :config
+  (global-hungry-delete-mode 1))
+
 ;; end of file
