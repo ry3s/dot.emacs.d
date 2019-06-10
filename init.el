@@ -173,18 +173,18 @@
 
 
 ;; ocaml merlin
- (push "<SHARE_DIR>/emacs/site-lisp" load-path) ; directory containing merlin.el
- ;;(setq merlin-command "<BIN_DIR>/ocamlmerlin")  ; needed only if ocamlmerlin not already in your PATH
-(autoload 'merlin-mode "merlin" "Merlin mode" t)
-(add-hook 'tuareg-mode-hook 'merlin-mode)
-(add-hook 'caml-mode-hook 'merlin-mode)
+;;  (push "<SHARE_DIR>/emacs/site-lisp" load-path) ; directory containing merlin.el
+;;  ;;(setq merlin-command "<BIN_DIR>/ocamlmerlin")  ; needed only if ocamlmerlin not already in your PATH
+;; (autoload 'merlin-mode "merlin" "Merlin mode" t)
+;; (add-hook 'tuareg-mode-hook 'merlin-mode)
+;; (add-hook 'caml-mode-hook 'merlin-mode)
 
 ;;OCamlのパッケージtuaregを有効化
-(load "/Users/saffron/.opam/system/share/emacs/site-lisp/tuareg-site-file")
-(add-to-list 'auto-mode-alist '("\\.ml[iylp]?$" . tuareg-mode))
-(autoload 'tuareg-mode "tuareg" "Major mode for editing OCaml code." t)
-(autoload 'tuareg-run-ocaml "tuareg" "Run an inferior OCaml process." t)
-(autoload 'ocamldebug "ocamldebug" "Run the OCaml debugger." t)
+;; (load "/Users/saffron/.opam/system/share/emacs/site-lisp/tuareg-site-file")
+;; (add-to-list 'auto-mode-alist '("\\.ml[iylp]?$" . tuareg-mode))
+;; (autoload 'tuareg-mode "tuareg" "Major mode for editing OCaml code." t)
+;; (autoload 'tuareg-run-ocaml "tuareg" "Run an inferior OCaml process." t)
+;; (autoload 'ocamldebug "ocamldebug" "Run the OCaml debugger." t)
 
 
 ;; Proof General
@@ -213,4 +213,16 @@
   :config
   (dashboard-setup-startup-hook))
 
+(use-package tuareg
+  :mode ("\\.ml\\'" . tuareg-mode))
+(use-package merlin
+  :config
+  (add-hook 'tuareg-mode-hook 'merlin-mode))
+
+(use-package markdown-mode
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown"))
 ;; end of file
