@@ -80,17 +80,6 @@
   (setq ivy-height 30) ;; mini-buffer のサイズ
   )
 
-
-
-;; ivy configurations
-;; (setq enable-recursive-minibuffers t)
-;; (setq ivy-extra-directories nil)
-;; (setq ivy-re-builders-alist
-;;       '((t . ivy--regex-plus)))
-
-;; counsel configurations
-;; (defvar counsel-find-file-ignore-regexp (regexp-opt '("./" "../")))
-
 ;;------------------------------------------------------------------------------
 (set-language-environment "Japanese")
 (set-default-coding-systems 'utf-8)
@@ -171,22 +160,6 @@
   (setq c-basic-offset 4
         indent-tabs-mode nil))
 
-
-;; ocaml merlin
-;;  (push "<SHARE_DIR>/emacs/site-lisp" load-path) ; directory containing merlin.el
-;;  ;;(setq merlin-command "<BIN_DIR>/ocamlmerlin")  ; needed only if ocamlmerlin not already in your PATH
-;; (autoload 'merlin-mode "merlin" "Merlin mode" t)
-;; (add-hook 'tuareg-mode-hook 'merlin-mode)
-;; (add-hook 'caml-mode-hook 'merlin-mode)
-
-;;OCamlのパッケージtuaregを有効化
-;; (load "/Users/saffron/.opam/system/share/emacs/site-lisp/tuareg-site-file")
-;; (add-to-list 'auto-mode-alist '("\\.ml[iylp]?$" . tuareg-mode))
-;; (autoload 'tuareg-mode "tuareg" "Major mode for editing OCaml code." t)
-;; (autoload 'tuareg-run-ocaml "tuareg" "Run an inferior OCaml process." t)
-;; (autoload 'ocamldebug "ocamldebug" "Run the OCaml debugger." t)
-
-
 ;; Proof General
 (load "~/.emacs.d/lisp/PG/generic/proof-site")
 
@@ -212,11 +185,6 @@
 (use-package dashboard
   :config
   (dashboard-setup-startup-hook))
-
-
-(use-package hungry-delete
-  :config
-  (global-hungry-delete-mode 1))
 
 (use-package tuareg
   :mode ("\\.ml\\'" . tuareg-mode))
