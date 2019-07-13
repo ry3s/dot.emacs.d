@@ -199,4 +199,19 @@
          ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "multimarkdown"))
 
+;; (use-package 'all-the-icons)
+(use-package neotree
+  :config
+  (setq neo-show-hidden-files t)
+  (global-set-key "\C-q" 'neotree-toggle)
+  (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
+
+;; rust-mode
+(use-package rust-mode
+  :config
+  (add-to-list 'exec-path (expand-file-name "~/.cargo/bin"))
+  (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
+  (add-hook 'rust-mode-hook #'racer-mode)
+  (add-hook 'racer-mode-hook #'eldoc-mode)
+  )
 ;; end of file
