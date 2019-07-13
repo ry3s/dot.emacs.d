@@ -87,6 +87,7 @@
 (set-selection-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 ;;---------------------------------------------------------------------------
+;;(add-to-list 'default-frame-alist '(font . "Monaco-13" ))
 (add-to-list 'default-frame-alist '(font . "MonacoB-13" ))
 
 ;;(setq resize-mini-windows nil)
