@@ -26,9 +26,9 @@
 
 ;; windows size
 (setq default-frame-alist
-     '((width . 100)
-       (height . 45)
-       ))
+      '((width . 100)
+        (height . 45)
+        ))
 
 ;;補完
 (use-package company
@@ -115,7 +115,7 @@
   (load-theme 'doom-dracula t)
   (doom-themes-neotree-config)
   (doom-themes-org-config)
-   )
+  )
 
 ;;カーソルの点滅をやめる
 (blink-cursor-mode 0)
@@ -124,12 +124,14 @@
 ;;タブの挙動（左端ではインデント，それ以外はタブの挿入）
 (setq tab-always-indent t)
 ;;タブをスペースに
-(setq-default tab-width 2 indent-tabs-mode nil)
+(setq-default tab-width 4 indent-tabs-mode nil)
 ;;列数を表示する
 (column-number-mode t)
 ;;行数を表示する
-(global-linum-mode t)
-(setq linum-format "%4d|")
+(if (version<= "26.0.50" emacs-version)
+    (global-display-line-numbers-mode))
+;;(global-linum-mode t)
+;;(setq linum-format "%4d|")
 ;;スクロールは１行ごと
 (setq scroll-conservatively 1)
 (setq scroll-preserve-screen-position 'always)
@@ -214,4 +216,10 @@
   (add-hook 'rust-mode-hook #'racer-mode)
   (add-hook 'racer-mode-hook #'eldoc-mode)
   )
+
+;; which key
+(use-package which-key
+  :diminish which-key-mode
+  :hook (after-init . which-key-mode))
+(put 'downcase-region 'disabled nil)
 ;; end of file
