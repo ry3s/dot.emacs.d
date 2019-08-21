@@ -87,8 +87,7 @@
 (set-selection-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 ;;---------------------------------------------------------------------------
-;;(add-to-list 'default-frame-alist '(font . "Monaco-13" ))
-(add-to-list 'default-frame-alist '(font . "MonacoB-13" ))
+(add-to-list 'default-frame-alist '(font . "Monaco-13" ))
 
 ;;(setq resize-mini-windows nil)
 (setq mouse-drag-copy-region t)
@@ -125,7 +124,8 @@
 ;;タブの挙動（左端ではインデント，それ以外はタブの挿入）
 (setq tab-always-indent t)
 ;;タブをスペースに
-(setq-default tab-width 4 indent-tabs-mode nil)
+(setq-default tab-width 4
+              indent-tabs-mode nil)
 ;;列数を表示する
 (column-number-mode t)
 ;;行数を表示する
@@ -157,11 +157,14 @@
 
 ;; cc mode settings
 (use-package cc-mode
-  :config
-  (setq c-default-style "k&r")
-  (c-toggle-hungry-state 1)
-  (setq c-basic-offset 4
-        indent-tabs-mode nil))
+  :init
+  (add-hook 'c-mode-common-hook
+            (lambda ()
+              (setq c-default-style "k&r")
+              (setq indent-tabs-mode nil)
+              (setq c-basic-offset 4)
+              (c-toggle-hungry-state 1)
+              )))
 
 ;; Proof General
 (load "~/.emacs.d/lisp/PG/generic/proof-site")
