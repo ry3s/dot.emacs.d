@@ -62,7 +62,10 @@
   :init (global-flycheck-mode)
   :custom
   (flycheck-clang-language-standard "c++14")
-  (flycheck-gcc-language-standard "c++14"))
+  (flycheck-gcc-language-standard "c++14")
+  (flycheck-python-flack8-executalbe "python3")
+  (flyckeck-python-pycompile-executable "python3")
+  (flyckeck-python-pylint-executable "python3"))
 
 (use-package counsel
   :bind
@@ -226,4 +229,14 @@
   :diminish which-key-mode
   :hook (after-init . which-key-mode))
 (put 'downcase-region 'disabled nil)
+
+;; elm
+(use-package elm-mode)
+
+;; purescript
+(use-package purescript-mode)
+
+;; python
+(add-hook 'python-mode-hook
+          (lambda () (setq python-indent-offset 4)))
 ;; end of file
