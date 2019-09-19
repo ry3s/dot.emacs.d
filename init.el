@@ -165,7 +165,7 @@
               (setq c-default-style "k&r")
               (setq indent-tabs-mode nil)
               (setq c-basic-offset 4)
-              (c-toggle-hungry-state 1)
+              (c-toggle-electric-state 1)
               )))
 
 ;; Proof General
