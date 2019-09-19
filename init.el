@@ -76,7 +76,6 @@
 (use-package ivy
   :bind
   ("C-x s" . swiper)
-  ("C-x C-r" . ivy-resume)
   :config
   (ivy-mode 1)
   (setq ivy-use-virtual-buffers nil)
