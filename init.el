@@ -1,4 +1,4 @@
-;;; package --- Main init file
+21;;; package --- Main init file
 ;;; Commentary:
 ;;; This is my init file
 
@@ -165,7 +165,6 @@
               (setq c-default-style "k&r")
               (setq indent-tabs-mode nil)
               (setq c-basic-offset 4)
-              (c-toggle-electric-state 1)
               )))
 
 ;; Proof General
@@ -207,7 +206,7 @@
          ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "multimarkdown"))
 
-;; (use-package 'all-the-icons)
+(use-package all-the-icons)
 (use-package neotree
   :config
   (setq neo-show-hidden-files t)
@@ -215,6 +214,7 @@
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
 
 ;; rust-mode
+(use-package racer)
 (use-package rust-mode
   :config
   (add-to-list 'exec-path (expand-file-name "~/.cargo/bin"))
@@ -238,4 +238,7 @@
 ;; python
 (add-hook 'python-mode-hook
           (lambda () (setq python-indent-offset 4)))
+
+;; nasm
+(use-package nasm-mode)
 ;; end of file
