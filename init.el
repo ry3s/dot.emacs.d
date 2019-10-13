@@ -91,7 +91,6 @@
 ;;---------------------------------------------------------------------------
 (add-to-list 'default-frame-alist '(font . "Monaco-13" ))
 
-;;(setq resize-mini-windows nil)
 (setq mouse-drag-copy-region t)
 ;;スタートアップメッセージを表示しない
 (setq inhibit-startup-message t)
@@ -118,7 +117,6 @@
   (doom-themes-neotree-config)
   (doom-themes-org-config)
   )
-
 ;;カーソルの点滅をやめる
 (blink-cursor-mode 0)
 ;;カーソル行のハイライト
@@ -133,8 +131,6 @@
 ;;行数を表示する
 (if (version<= "26.0.50" emacs-version)
     (global-display-line-numbers-mode))
-;;(global-linum-mode t)
-;;(setq linum-format "%4d|")
 ;;スクロールは１行ごと
 (setq scroll-conservatively 1)
 (setq scroll-preserve-screen-position 'always)
@@ -147,8 +143,6 @@
   :config (exec-path-from-shell-initialize))
 ;;最後に改行を入れる
 (setq require-final-newline t)
-;;行末の空白を表示
-;;(setq-default show-trailing-whitespace t)
 ;;自動で空白を削除
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 ;;------------------------------------------------------------------------------
@@ -163,7 +157,6 @@
   (add-hook 'c-mode-common-hook
             (lambda ()
               (setq c-default-style "k&r")
-              (setq indent-tabs-mode nil)
               (setq c-basic-offset 4)
               )))
 
@@ -205,13 +198,6 @@
          ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "multimarkdown"))
 
-(use-package all-the-icons)
-(use-package neotree
-  :config
-  (setq neo-show-hidden-files t)
-  (global-set-key "\C-q" 'neotree-toggle)
-  (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
-
 ;; rust-mode
 (use-package racer)
 (use-package rust-mode
@@ -238,6 +224,9 @@
 (add-hook 'python-mode-hook
           (lambda () (setq python-indent-offset 4)))
 
+;; magit
+(use-package magit
+  :config (global-set-key (kbd "C-x g") 'magit-status))
 ;; nasm
 (use-package nasm-mode)
 ;; end of file
