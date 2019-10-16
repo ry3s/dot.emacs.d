@@ -145,6 +145,7 @@
 (setq require-final-newline t)
 ;;自動で空白を削除
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
+
 ;;------------------------------------------------------------------------------
 ;;元に戻す
 (global-set-key "\C-u" 'undo)
