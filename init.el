@@ -63,9 +63,10 @@
   :custom
   (flycheck-clang-language-standard "c++14")
   (flycheck-gcc-language-standard "c++14")
-  (flycheck-python-flack8-executalbe "python3")
-  (flyckeck-python-pycompile-executable "python3")
-  (flyckeck-python-pylint-executable "python3"))
+  ;; (flycheck-python-flack8-executalbe "python3")
+  ;; (flyckeck-python-pycompile-executable "python3")
+  ;; (flyckeck-python-pylint-executable "python3")
+  )
 
 (use-package counsel
   :bind
@@ -140,7 +141,7 @@
 (electric-pair-mode 1)
 ;;shellの設定を引き継ぐ
 (use-package exec-path-from-shell
-  :config (exec-path-from-shell-initialize))
+  :init (exec-path-from-shell-initialize))
 ;;最後に改行を入れる
 (setq require-final-newline t)
 ;;自動で空白を削除
@@ -224,6 +225,10 @@
 ;; python
 (add-hook 'python-mode-hook
           (lambda () (setq python-indent-offset 4)))
+  (add-to-list 'auto-mode-alist '("\\\.py\\\'" . python-mode))
+
+
+
 
 ;; magit
 (use-package magit
