@@ -55,18 +55,19 @@
 
 ;; (define-key company-active-map [tab] 'company-complete-selection) ;; TABで候補を設定
 
-
+;; LSP
+(use-package eglot)
 ;; flycheck
 
-(use-package flycheck
-  :init (global-flycheck-mode)
-  :custom
-  (flycheck-clang-language-standard "c++14")
-  (flycheck-gcc-language-standard "c++14")
-  ;; (flycheck-python-flack8-executalbe "python3")
-  ;; (flyckeck-python-pycompile-executable "python3")
-  ;; (flyckeck-python-pylint-executable "python3")
-  )
+;; (use-package flycheck
+;;   :init (global-flycheck-mode)
+;;   :custom
+;;   (flycheck-clang-language-standard "c++14")
+;;   (flycheck-gcc-language-standard "c++14")
+;;   ;; (flycheck-python-flack8-executalbe "python3")
+;;   ;; (flyckeck-python-pycompile-executable "python3")
+;;   ;; (flyckeck-python-pylint-executable "python3")
+;;   )
 
 (use-package counsel
   :bind
@@ -161,7 +162,9 @@
               (setq c-default-style "k&r")
               (setq c-basic-offset 4)
               )))
-
+(add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
+(add-hook 'c-mode-hook 'eglot-ensure)
+(add-hook 'c++-mode-hook 'eglot-ensure)
 ;; Proof General
 (load "~/.emacs.d/lisp/PG/generic/proof-site")
 
@@ -225,10 +228,8 @@
 ;; python
 (add-hook 'python-mode-hook
           (lambda () (setq python-indent-offset 4)))
-  (add-to-list 'auto-mode-alist '("\\\.py\\\'" . python-mode))
-
-
-
+(add-hook 'python-mode-hook 'eglot-ensure)
+(add-to-list 'auto-mode-alist '("\\\.py\\\'" . python-mode))
 
 ;; magit
 (use-package magit
