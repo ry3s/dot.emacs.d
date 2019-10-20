@@ -1,4 +1,4 @@
-21;;; package --- Main init file
+;;; package --- Main init file
 ;;; Commentary:
 ;;; This is my init file
 
@@ -56,18 +56,18 @@
 ;; (define-key company-active-map [tab] 'company-complete-selection) ;; TABで候補を設定
 
 ;; LSP
-(use-package eglot)
+;;(use-package eglot)
 ;; flycheck
 
-;; (use-package flycheck
-;;   :init (global-flycheck-mode)
-;;   :custom
-;;   (flycheck-clang-language-standard "c++14")
-;;   (flycheck-gcc-language-standard "c++14")
-;;   ;; (flycheck-python-flack8-executalbe "python3")
-;;   ;; (flyckeck-python-pycompile-executable "python3")
-;;   ;; (flyckeck-python-pylint-executable "python3")
-;;   )
+(use-package flycheck
+  :init (global-flycheck-mode)
+  :custom
+  (flycheck-clang-language-standard "c++14")
+  (flycheck-gcc-language-standard "c++14")
+  ;; (flycheck-python-flack8-executalbe "python3")
+  ;; (flyckeck-python-pycompile-executable "python3")
+  ;; (flyckeck-python-pylint-executable "python3")
+  )
 
 (use-package counsel
   :bind
@@ -154,6 +154,13 @@
 ;;buffer listを現在のウィンドウに表示
 (global-set-key "\C-x\C-b" 'buffer-menu)
 
+;; indent guide
+(use-package indent-guide
+  :init
+  (indent-guide-global-mode)
+  :config
+  (set-face-foreground 'indent-guide-face "cyan")
+  (setq indent-guide-recursive t))
 ;; cc mode settings
 (use-package cc-mode
   :init
@@ -162,9 +169,6 @@
               (setq c-default-style "k&r")
               (setq c-basic-offset 4)
               )))
-(add-to-list 'eglot-server-programs '((c++-mode c-mode) "clangd"))
-(add-hook 'c-mode-hook 'eglot-ensure)
-(add-hook 'c++-mode-hook 'eglot-ensure)
 ;; Proof General
 (load "~/.emacs.d/lisp/PG/generic/proof-site")
 
@@ -219,6 +223,21 @@
   :hook (after-init . which-key-mode))
 (put 'downcase-region 'disabled nil)
 
+;; rainbow-delimiters
+(use-package rainbow-delimiters
+  :init
+  (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
+(use-package cl-lib)
+(use-package color)
+(defun rainbow-delimiters-using-stronger-colors ()
+  (interactive)
+  (cl-loop
+   for index from 1 to rainbow-delimiters-max-face-count
+   do
+   (let ((face (intern (format "rainbow-delimiters-depth-%d-face" index))))
+     (cl-callf color-saturate-name (face-foreground face ) 30))))
+(add-hook 'emacs-startup-hook 'rainbow-delimiters-using-stronger-colors)
+
 ;; elm
 (use-package elm-mode)
 
@@ -226,9 +245,11 @@
 (use-package purescript-mode)
 
 ;; python
+(use-package company-jedi)
 (add-hook 'python-mode-hook
-          (lambda () (setq python-indent-offset 4)))
-(add-hook 'python-mode-hook 'eglot-ensure)
+          (lambda () (setq python-indent-offset 4))
+          (add-to-list 'company-backends 'company-jedi)
+          )
 (add-to-list 'auto-mode-alist '("\\\.py\\\'" . python-mode))
 
 ;; magit
