@@ -53,20 +53,15 @@
   ;; すべてのバッファで有効にする
   (global-company-mode))
 
-;; (define-key company-active-map [tab] 'company-complete-selection) ;; TABで候補を設定
-
-;; LSP
-;;(use-package eglot)
 ;; flycheck
-
 (use-package flycheck
   :init (global-flycheck-mode)
   :custom
   (flycheck-clang-language-standard "c++14")
   (flycheck-gcc-language-standard "c++14")
-  ;; (flycheck-python-flack8-executalbe "python3")
-  ;; (flyckeck-python-pycompile-executable "python3")
-  ;; (flyckeck-python-pylint-executable "python3")
+  (flycheck-python-flack8-executalbe "python3")
+  (flyckeck-python-pycompile-executable "python3")
+  (flyckeck-python-pylint-executable "python3")
   )
 
 (use-package counsel
