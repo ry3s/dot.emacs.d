@@ -149,13 +149,13 @@
 ;;buffer listを現在のウィンドウに表示
 (global-set-key "\C-x\C-b" 'buffer-menu)
 
-;; indent guide
-(use-package indent-guide
-  :init
-  (indent-guide-global-mode)
-  :config
-  (set-face-foreground 'indent-guide-face "cyan")
-  (setq indent-guide-recursive t))
+;; ;; indent guide
+;; (use-package indent-guide
+;;   :init
+;;   (indent-guide-global-mode)
+;;   :config
+;;   (set-face-foreground 'indent-guide-face "cyan")
+;;   (setq indent-guide-recursive t))
 ;; cc mode settings
 (use-package cc-mode
   :init
@@ -189,12 +189,21 @@
   :config
   (dashboard-setup-startup-hook))
 
+;; OCaml
 (use-package tuareg
   :mode ("\\.ml\\'" . tuareg-mode))
 (use-package merlin
   :config
   (add-hook 'tuareg-mode-hook 'merlin-mode))
 
+;; pure script
+(use-package psc-ide
+  :init
+  (add-hook 'purescript-mode-hook
+            (lambda ()
+              (psc-ide-mode)
+              (turn-on-purescript-indentation)))
+  (setq psc-ide-use-npm-bin t))
 (use-package markdown-mode
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
@@ -219,19 +228,19 @@
 (put 'downcase-region 'disabled nil)
 
 ;; rainbow-delimiters
-(use-package rainbow-delimiters
-  :init
-  (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
-(use-package cl-lib)
-(use-package color)
-(defun rainbow-delimiters-using-stronger-colors ()
-  (interactive)
-  (cl-loop
-   for index from 1 to rainbow-delimiters-max-face-count
-   do
-   (let ((face (intern (format "rainbow-delimiters-depth-%d-face" index))))
-     (cl-callf color-saturate-name (face-foreground face ) 30))))
-(add-hook 'emacs-startup-hook 'rainbow-delimiters-using-stronger-colors)
+;; (use-package rainbow-delimiters
+;;   :init
+;;   (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
+;; (use-package cl-lib)
+;; (use-package color)
+;; (defun rainbow-delimiters-using-stronger-colors ()
+;;   (interactive)
+;;   (cl-loop
+;;    for index from 1 to rainbow-delimiters-max-face-count
+;;    do
+;;    (let ((face (intern (format "rainbow-delimiters-depth-%d-face" index))))
+;;      (cl-callf color-saturate-name (face-foreground face ) 30))))
+;; (add-hook 'emacs-startup-hook 'rainbow-delimiters-using-stronger-colors)
 
 ;; elm
 (use-package elm-mode)
