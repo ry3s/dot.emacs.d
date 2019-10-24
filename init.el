@@ -156,14 +156,38 @@
 ;;   :config
 ;;   (set-face-foreground 'indent-guide-face "cyan")
 ;;   (setq indent-guide-recursive t))
+
+;; irony (for c++)
+(use-package irony
+  :init
+  (add-hook 'c++-mode-hook 'irony-mode)
+  (add-hook 'c-mode-common-hook 'irony-mode)
+  ;; C++言語用にコンパイルオプションを設定する.
+  (add-hook 'c++-mode-hook
+            '(lambda ()
+               (setq irony-additional-clang-options '("-std=c++14" "-Wall" "-Wextra"))))
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-cmpile-options)
+
+  )
+(use-package company-irony
+  :defer t
+  :config
+  ;; companyの補完のバックエンドにironyを使用する.
+  (add-to-list 'company-backends '(company-irony-c-headers company-irony))
+  )
 ;; cc mode settings
 (use-package cc-mode
   :init
   (add-hook 'c-mode-common-hook
             (lambda ()
               (setq c-default-style "k&r")
+              (setq indent-tabs-mode nil)
               (setq c-basic-offset 4)
-              )))
+              ))
+  )
+;; ;; flyckeck-irony
+;; (use-package flycheck-irony
+;;   :init (flyckeck-irony-setup))
 ;; Proof General
 (load "~/.emacs.d/lisp/PG/generic/proof-site")
 
