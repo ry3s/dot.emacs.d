@@ -57,8 +57,8 @@
 (use-package flycheck
   :init (global-flycheck-mode)
   :custom
-  (flycheck-clang-language-standard "c++14")
-  (flycheck-gcc-language-standard "c++14")
+  (flycheck-clang-language-standard "c++17")
+  (flycheck-gcc-language-standard "c++17")
   (flycheck-python-flack8-executalbe "python3")
   (flyckeck-python-pycompile-executable "python3")
   (flyckeck-python-pylint-executable "python3")
@@ -79,6 +79,13 @@
   (setq ivy-height 30) ;; mini-buffer のサイズ
   )
 
+(use-package lsp-mode
+  :init
+  (setq lsp-prefer-flymake :none))
+(use-package lsp-ui
+  :init
+  (add-hook 'lsp-mode-hook 'lsp-ui-mode))
+(use-package company-lsp)
 ;;------------------------------------------------------------------------------
 (set-language-environment "Japanese")
 (set-default-coding-systems 'utf-8)
@@ -157,6 +164,12 @@
 ;;   (set-face-foreground 'indent-guide-face "cyan")
 ;;   (setq indent-guide-recursive t))
 
+;; expand-region.el
+(use-package expand-region
+  :init
+  (global-set-key (kbd "C-@") 'er/expand-region)
+  (global-set-key (kbd "C-M-@") 'er/contract-region)
+  )
 ;; irony (for c++)
 (use-package irony
   :init
@@ -166,6 +179,10 @@
   (add-hook 'c++-mode-hook
             '(lambda ()
                (setq irony-additional-clang-options '("-std=c++14" "-Wall" "-Wextra"))))
+  (add-hook 'c++mode-hook
+            (lambda ()
+              (setq flyckeck-clang-include-path
+                    (list ("/opt/local/include")))))
   (add-hook 'irony-mode-hook 'irony-cdb-autosetup-cmpile-options)
 
   )
@@ -236,35 +253,17 @@
   :init (setq markdown-command "multimarkdown"))
 
 ;; rust-mode
-(use-package racer)
-(use-package rust-mode
-  :config
-  (add-to-list 'exec-path (expand-file-name "~/.cargo/bin"))
-  (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
-  (add-hook 'rust-mode-hook #'racer-mode)
-  (add-hook 'racer-mode-hook #'eldoc-mode)
-  )
+(use-package rustic
+  :init
+  (setq rustic-flycheck-setup-mode-line-p nil))
+
+
 
 ;; which key
 (use-package which-key
   :diminish which-key-mode
   :hook (after-init . which-key-mode))
 (put 'downcase-region 'disabled nil)
-
-;; rainbow-delimiters
-;; (use-package rainbow-delimiters
-;;   :init
-;;   (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
-;; (use-package cl-lib)
-;; (use-package color)
-;; (defun rainbow-delimiters-using-stronger-colors ()
-;;   (interactive)
-;;   (cl-loop
-;;    for index from 1 to rainbow-delimiters-max-face-count
-;;    do
-;;    (let ((face (intern (format "rainbow-delimiters-depth-%d-face" index))))
-;;      (cl-callf color-saturate-name (face-foreground face ) 30))))
-;; (add-hook 'emacs-startup-hook 'rainbow-delimiters-using-stronger-colors)
 
 ;; elm
 (use-package elm-mode)
