@@ -1,9 +1,6 @@
-;;; package --- Main init file
+;;; package --- Summary
 ;;; Commentary:
-;;; This is my init file
-
 ;;; Code:
-
 ;; from straight.el README
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -27,8 +24,7 @@
 ;; windows size
 (setq default-frame-alist
       '((width . 100)
-        (height . 45)
-        ))
+        (height . 45)))
 
 ;;補完
 (use-package company
@@ -61,8 +57,7 @@
   (flycheck-gcc-language-standard "c++17")
   (flycheck-python-flack8-executalbe "python3")
   (flyckeck-python-pycompile-executable "python3")
-  (flyckeck-python-pylint-executable "python3")
-  )
+  (flyckeck-python-pylint-executable "python3"))
 
 (use-package counsel
   :bind
@@ -76,8 +71,8 @@
   :config
   (ivy-mode 1)
   (setq ivy-use-virtual-buffers nil)
-  (setq ivy-height 30) ;; mini-buffer のサイズ
-  )
+  ;; mini-buffer のサイズ
+  (setq ivy-height 30))
 
 (use-package lsp-mode
   :init
@@ -119,8 +114,7 @@
   :config
   (load-theme 'doom-dracula t)
   (doom-themes-neotree-config)
-  (doom-themes-org-config)
-  )
+  (doom-themes-org-config))
 ;;カーソルの点滅をやめる
 (blink-cursor-mode 0)
 ;;カーソル行のハイライト
@@ -147,29 +141,19 @@
   :init (exec-path-from-shell-initialize))
 ;;最後に改行を入れる
 (setq require-final-newline t)
-;;自動で空白を削除
+;; 自動で空白を削除
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
-
 ;;------------------------------------------------------------------------------
 ;;元に戻す
 (global-set-key "\C-u" 'undo)
 ;;buffer listを現在のウィンドウに表示
 (global-set-key "\C-x\C-b" 'buffer-menu)
 
-;; ;; indent guide
-;; (use-package indent-guide
-;;   :init
-;;   (indent-guide-global-mode)
-;;   :config
-;;   (set-face-foreground 'indent-guide-face "cyan")
-;;   (setq indent-guide-recursive t))
-
 ;; expand-region.el
 (use-package expand-region
   :init
   (global-set-key (kbd "C-@") 'er/expand-region)
-  (global-set-key (kbd "C-M-@") 'er/contract-region)
-  )
+  (global-set-key (kbd "C-M-@") 'er/contract-region))
 ;; irony (for c++)
 (use-package irony
   :init
@@ -183,15 +167,12 @@
             (lambda ()
               (setq flyckeck-clang-include-path
                     (list ("/opt/local/include")))))
-  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-cmpile-options)
-
-  )
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-cmpile-options))
 (use-package company-irony
   :defer t
   :config
   ;; companyの補完のバックエンドにironyを使用する.
-  (add-to-list 'company-backends '(company-irony-c-headers company-irony))
-  )
+  (add-to-list 'company-backends '(company-irony-c-headers company-irony)))
 ;; cc mode settings
 (use-package cc-mode
   :init
@@ -199,12 +180,7 @@
             (lambda ()
               (setq c-default-style "k&r")
               (setq indent-tabs-mode nil)
-              (setq c-basic-offset 4)
-              ))
-  )
-;; ;; flyckeck-irony
-;; (use-package flycheck-irony
-;;   :init (flyckeck-irony-setup))
+              (setq c-basic-offset 4))))
 ;; Proof General
 (load "~/.emacs.d/lisp/PG/generic/proof-site")
 
@@ -222,9 +198,7 @@
               ("C-x i n" . yas-new-snippet)
               ("C-x i v" . yas-visit-snippet-file)
               ("C-x i l" . yas-describe-tables)
-              ("C-x i g" . yas-reload-all))
-  ;;(setq yas-prompt-functions '(yas-ido-prompt))
-  )
+              ("C-x i g" . yas-reload-all)))
 
 (use-package dashboard
   :config
@@ -256,9 +230,6 @@
 (use-package rustic
   :init
   (setq rustic-flycheck-setup-mode-line-p nil))
-
-
-
 ;; which key
 (use-package which-key
   :diminish which-key-mode
@@ -275,8 +246,7 @@
 (use-package company-jedi)
 (add-hook 'python-mode-hook
           (lambda () (setq python-indent-offset 4))
-          (add-to-list 'company-backends 'company-jedi)
-          )
+          (add-to-list 'company-backends 'company-jedi))
 (add-to-list 'auto-mode-alist '("\\\.py\\\'" . python-mode))
 
 ;; magit
@@ -285,3 +255,5 @@
 ;; nasm
 (use-package nasm-mode)
 ;; end of file
+(provide 'init)
+;;; init.el
