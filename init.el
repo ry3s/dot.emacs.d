@@ -84,7 +84,10 @@
   (setq lsp-prefer-flymake :none))
 (use-package lsp-ui
   :init
-  (add-hook 'lsp-mode-hook 'lsp-ui-mode))
+  (add-hook 'lsp-mode-hook 'lsp-ui-mode)
+  :custom
+  (lsp-ui-doc-enable nil)
+  )
 (use-package company-lsp)
 ;;------------------------------------------------------------------------------
 (set-language-environment "Japanese")
@@ -107,6 +110,9 @@
 ;; ツールバーを非表示
 (if window-system (tool-bar-mode -1))
 (if window-system (scroll-bar-mode 0))
+(when (eq window-system 'ns)
+  (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+  (add-to-list 'default-frame-alist '(ns-appearance . dark)))
 ;;ビープ音と画面フラッシュを消す
 (setq ring-bell-function 'ignore)
 ;;テーマ
@@ -156,6 +162,7 @@
 ;;buffer listを現在のウィンドウに表示
 (global-set-key "\C-x\C-b" 'buffer-menu)
 
+(use-package multi-term)
 ;; ;; indent guide
 ;; (use-package indent-guide
 ;;   :init
@@ -265,6 +272,14 @@
   :hook (after-init . which-key-mode))
 (put 'downcase-region 'disabled nil)
 
+;; dimmer
+(use-package dimmer
+  :init
+  (dimmer-mode t)
+  (setq dimmer-fraction 0.1)
+  :custom
+  (dimmer-configure-which-key)
+  )
 ;; elm
 (use-package elm-mode)
 
@@ -283,5 +298,7 @@
 (use-package magit
   :config (global-set-key (kbd "C-x g") 'magit-status))
 ;; nasm
-(use-package nasm-mode)
+(use-package nasm-mode
+  :config
+  (add-hook 'asm-mode-hook 'nasm-mode))
 ;; end of file
