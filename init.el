@@ -101,7 +101,11 @@
 ;;終了時にオートセーブファイルを削除
 (setq delete-auto-save-files t)
 ;; メニューバーを非表示
-(menu-bar-mode 1)
+(menu-bar-mode nil)
+(setq frame-title-format
+      '((:eval (if (buffer-file-name)
+                   (abbreviate-file-name (buffer-file-name))
+                 "%b"))))
 ;; ツールバーを非表示
 (if window-system (tool-bar-mode -1))
 (if window-system (scroll-bar-mode 0))
@@ -142,17 +146,28 @@
 (setq mac-option-modifier 'meta)
 ;; カッコの自動対応
 (electric-pair-mode 1)
+;; 対応するカッコ
+(show-paren-mode 1)
+(setq show-paren-style 'parenthesis)
+(set-face-attribute 'show-paren-match nil
+                    :weight 'extra-bold)
 ;;shellの設定を引き継ぐ
 (use-package exec-path-from-shell
   :init (exec-path-from-shell-initialize))
 ;;最後に改行を入れる
-(setq require-final-newline t)
+;; (setq require-final-newline t)
 ;; 自動で空白を削除
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
+;; C-x C-c で容易にEmacsを終了させないように質問する
+(setq confirm-kill-emacs 'y-or-n-p)
+;; 右から左に読む言語に対応させないことで描画高速化
+(setq-default bidi-display-reordering nil)
+;; GC
+(setq gc-cons-threshold 50000000)
 ;;------------------------------------------------------------------------------
-;;元に戻す
-(global-set-key "\C-u" 'undo)
-;;buffer listを現在のウィンドウに表示
+;; ;;元に戻す
+;; (global-set-key "\C-u" 'undo)
+;; buffer listを現在のウィンドウに表示
 (global-set-key "\C-x\C-b" 'buffer-menu)
 
 ;; expand-region.el
@@ -272,4 +287,4 @@
   (add-hook 'asm-mode-hook 'nasm-mode))
 ;; end of file
 (provide 'init)
-;;; init.el
+;;;
