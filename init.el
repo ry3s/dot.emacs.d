@@ -91,7 +91,23 @@
 (set-selection-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 ;;---------------------------------------------------------------------------
-(add-to-list 'default-frame-alist '(font . "Monaco-13" ))
+;; font settings
+(create-fontset-from-ascii-font
+ "Monaco-13:weight=normal:slant=normal"
+ nil
+ "monacohiragino")
+
+(set-fontset-font
+ "fontset-monacohiragino"
+ 'unicode
+ (font-spec :family "Hiragino Sans")
+ nil
+ 'append)
+
+(add-to-list 'default-frame-alist '(font . "fontset-monacohiragino"))
+(setq face-font-rescale-alist '(("Hiragino.*" . 1.0)))
+
+;; (add-to-list 'default-frame-alist '(font . "Monaco-13" ))
 
 (setq mouse-drag-copy-region t)
 ;;スタートアップメッセージを表示しない
@@ -137,8 +153,7 @@
 ;;列数を表示する
 (column-number-mode t)
 ;;行数を表示する
-(if (version<= "26.0.50" emacs-version)
-    (global-display-line-numbers-mode))
+(global-display-line-numbers-mode)
 ;;スクロールは１行ごと
 (setq scroll-conservatively 1)
 (setq scroll-preserve-screen-position 'always)
@@ -155,7 +170,7 @@
 (use-package exec-path-from-shell
   :init (exec-path-from-shell-initialize))
 ;;最後に改行を入れる
-;; (setq require-final-newline t)
+(setq require-final-newline t)
 ;; 自動で空白を削除
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 ;; C-x C-c で容易にEmacsを終了させないように質問する
@@ -170,12 +185,7 @@
 ;; buffer listを現在のウィンドウに表示
 (global-set-key "\C-x\C-b" 'buffer-menu)
 
-;; expand-region.el
-(use-package expand-region
-  :init
-  (global-set-key (kbd "C-@") 'er/expand-region)
-  (global-set-key (kbd "C-M-@") 'er/contract-region))
-;; irony (for c++)
+;; irony (for C++)
 (use-package irony
   :init
   (add-hook 'c++-mode-hook 'irony-mode)
