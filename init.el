@@ -131,16 +131,19 @@
 ;;ビープ音と画面フラッシュを消す
 (setq ring-bell-function 'ignore)
 ;;テーマ
-(use-package doom-themes
-  :custom
-  (doom-themes-enable-italic t)
-  (doom-thmes-enable-bold t)
-  :custom-face
-  (doom-modeline-bar ((t (:background "#6272a4"))))
+;; (use-package doom-themes
+;;   :custom
+;;   (doom-themes-enable-italic t)
+;;   (doom-thmes-enable-bold t)
+;;   :custom-face
+;;   (doom-modeline-bar ((t (:background "#6272a4"))))
+;;   :config
+;;   (load-theme 'doom-dracula t)
+;;   (doom-themes-neotree-config)
+;;   (doom-themes-org-config))
+(use-package base16-theme
   :config
-  (load-theme 'doom-dracula t)
-  (doom-themes-neotree-config)
-  (doom-themes-org-config))
+  (load-theme 'base16-monokai t))
 ;;カーソルの点滅をやめる
 (blink-cursor-mode 0)
 ;;カーソル行のハイライト
@@ -182,7 +185,7 @@
 ;;------------------------------------------------------------------------------
 ;; ;;元に戻す
 ;; (global-set-key "\C-u" 'undo)
-;; buffer listを現在のウィンドウに表示
+;; buffer listを現在のウィンドウnnに表示
 (global-set-key "\C-x\C-b" 'buffer-menu)
 
 ;; irony (for C++)
