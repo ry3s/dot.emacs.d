@@ -164,6 +164,8 @@
 (setq mac-option-modifier 'meta)
 ;; カッコの自動対応
 (electric-pair-mode 1)
+;; BSしたときに対応する閉じカッコを消さない
+(setq electric-pair-delete-adjacent-pairs nil)
 ;; 対応するカッコ
 (show-paren-mode 1)
 (setq show-paren-style 'parenthesis)

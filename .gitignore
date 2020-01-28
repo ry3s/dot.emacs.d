@@ -60,3 +60,4 @@ kkcrc
 ac-comphist.dat
 elpy
 .lsp*
+.python-environments/
