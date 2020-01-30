@@ -44,8 +44,17 @@
   (setq company-dabbrev-downcase nil)
   (setq completion-ignore-case t)
   (setq company-idle-delay 0)
-  ;;
   (define-key emacs-lisp-mode-map (kbd "C-M-i") 'company-complete)
+  (defun edit-category-table-for-company-dabbrev (&optional table)
+    (define-category ?s "word constituents for company-dabbrev" table)
+    (let ((i 0))
+      (while (< i 128)
+        (if (equal ?w (char-syntax i))
+            (modify-category-entry i ?s table)
+          (modify-category-entry i ?s table t))
+        (setq i (1+ i)))))
+  (edit-category-table-for-company-dabbrev)
+  (setq company-dabbrev-char-regexp "\\cs")
   ;; すべてのバッファで有効にする
   (global-company-mode))
 
@@ -81,8 +90,7 @@
   :init
   (add-hook 'lsp-mode-hook 'lsp-ui-mode)
   :custom
-  (lsp-ui-doc-enable nil)
-  )
+  (lsp-ui-doc-enable nil))
 (use-package company-lsp)
 ;;------------------------------------------------------------------------------
 (set-language-environment "Japanese")
@@ -143,7 +151,10 @@
 ;;   (doom-themes-org-config))
 (use-package base16-theme
   :config
-  (load-theme 'base16-monokai t))
+  (load-theme 'base16-monokai t)
+  (set-face-foreground 'font-lock-comment-face "#969079")
+  (set-face-foreground 'font-lock-comment-delimiter-face "#969079"))
+
 ;;カーソルの点滅をやめる
 (blink-cursor-mode 0)
 ;;カーソル行のハイライト
@@ -169,8 +180,8 @@
 ;; 対応するカッコ
 (show-paren-mode 1)
 (setq show-paren-style 'parenthesis)
-(set-face-attribute 'show-paren-match nil
-                    :weight 'extra-bold)
+;; (set-face-attribute 'show-paren-match nil
+;;                     :weight 'extra-bold)
 ;;shellの設定を引き継ぐ
 (use-package exec-path-from-shell
   :init (exec-path-from-shell-initialize))
@@ -184,11 +195,16 @@
 (setq-default bidi-display-reordering nil)
 ;; GC
 (setq gc-cons-threshold 50000000)
-;;------------------------------------------------------------------------------
-;; ;;元に戻す
-;; (global-set-key "\C-u" 'undo)
-;; buffer listを現在のウィンドウnnに表示
+;; buffer list を現在のウィンドウに表示
 (global-set-key "\C-x\C-b" 'buffer-menu)
+;; back space の設定
+(global-set-key (kbd "C-h") 'delete-backward-char)
+;;------------------------------------------------------------------------------
+
+;; for redo, undo
+(use-package redo+
+  :config
+  (global-set-key (kbd "C-M-/") 'redo))
 
 ;; irony (for C++)
 (use-package irony
