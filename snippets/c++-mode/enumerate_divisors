@@ -1,8 +1,8 @@
 # -*- mode: snippet -*-
-# name: make_divisors
-# key: make_divisors
+# name: enumerate_divisors
+# key: enumerate_divisors
 # --
-vector<int64_t> make_divisors(int64_t n) {
+vector<int64_t> enumerate_divisors(int64_t n) {
     vector<int64_t> res;
 
     for (int64_t i = 1LL; i * i <= n; ++i) {
