@@ -1,0 +1,17 @@
+# -*- mode: snippet -*-
+# name: gcd
+# key: gcd
+# --
+int64_t gcd(int64_t a, int64_t b) {
+    if (a < b) return gcd(b, a);
+
+    int64_t r;
+    while ((r = a % b)) {
+        a = b;
+        b = r;
+    }
+    return b;
+}
+int64_t lcm(int64_t a, int64_t b) {
+    return a * b / gcd(a, b);
+}

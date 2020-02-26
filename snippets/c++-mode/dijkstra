@@ -1,0 +1,26 @@
+# -*- mode: snippet -*-
+# name: dijkstra
+# key: dijkstra
+# --
+vector<int64_t> dijkstra(const Graph &g, int s) {
+    int n = g.size();
+    vector<int64_t> dist(n, INF);
+    priority_queue<pair<int64_t, int>, vector<pair<int64_t, int>>, greater<>> que;
+
+    que.push({0, s});
+    dist[s] = 0;
+    while(not que.empty()) {
+        auto dv = que.top(); que.pop();
+        int64_t d = dv.first;
+        int v = dv.second;
+
+        if (dist[v] < d) continue;
+        for (auto e: g[v]) {
+            if (dist[v] + e.second < dist[e.first]) {
+                dist[e.first] = dist[v] + e.second;
+                que.push({dist[e.first], e.first});
+            }
+        }
+    }
+    return dist;
+}

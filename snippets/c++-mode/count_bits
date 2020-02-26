@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: count_bits
+# key: count_bits
+# --
+int count_bits(int bits) {
+    int num = 0;
+    while (bits != 0) {
+        num++;
+        bits &= bits - 1;
+    }
+    return num;
+}

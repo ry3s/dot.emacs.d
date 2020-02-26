@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+# name: warshall_floyd
+# key: warshall_floyd
+# --
+bool warshall_floyd(vector<vector<int64_t>> &dist) {
+    int n = dist.size();
+    const int64_t INF = (1LL << 60);
+    rep(k, n) rep(i, n) if (dist[i][k] != INF) {
+        rep(j, n) if (dist[k][j] != INF) {
+            dist[i][j]= min(dist[i][j] , dist[i][k] + dist[k][j]);
+            if (j == k and dist[j][k] < 0) return false;
+        }
+    }
+    return true;
+}
