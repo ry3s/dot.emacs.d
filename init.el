@@ -1,4 +1,4 @@
-;;; package --- Summary
+2;;; package --- Summary
 ;;; Commentary:
 ;;; Code:
 ;; from straight.el README
@@ -10,7 +10,7 @@
     (with-current-buffer
         (url-retrieve-synchronously
          "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
+n         'silent 'inhibit-cookies)
       (goto-char (point-max))
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
@@ -85,13 +85,46 @@
 
 (use-package lsp-mode
   :init
-  (setq lsp-prefer-flymake :none))
-(use-package lsp-ui
-  :init
-  (add-hook 'lsp-mode-hook 'lsp-ui-mode)
-  :custom
-  (lsp-ui-doc-enable nil))
-(use-package company-lsp)
+  (setq lsp-prefer-flymake :none)
+
+  :config
+  (use-package counsel-etags)
+  (use-package company-ctags)
+  (use-package find-file-in-project)
+  ;; enable log only for debug
+  (setq lsp-log-io nil)
+  ;; no real time syntax check
+  (setq lsp-diagnostic-package :none)
+  ;; handle yasnippet by myself
+  (setq lsp-enable-snippet nil)
+  ;; use `company-ctags' only
+  ;; Please note `company-lsp' is automatically enabled if installed
+  (setq lsp-enable-completion-at-point nil)
+  ;; turn off for better performance
+  (setq lsp-enable-symbol-highlighting nil)
+  ;; use ffip insted
+  (setq lsp-enable-links nil)
+  ;; auto restart lsp
+  (setq lsp-restart 'auto-restart)
+  ;; @see https://github.com/emacs-lsp/lsp-mode/pull/1498 and code related to auto configure.
+  ;; Require clients could be slow.
+  ;; I only load `lsp-clients' because it includes the js client which I'm interested
+  (setq lsp-client-packages '(lsp-clients))
+
+  ;; don't ping LSP lanaguage server too frequently
+  (defvar lsp-on-touch-time 0)
+  (defadvice lsp-on-change (around lsp-on-change-hack activate)
+    ;; don't run `lsp-on-change' too frequently
+    (when (> (- (float-time (current-time))
+                lsp-on-touch-time) 30) ;; 30 seconds
+      (setq lsp-on-touch-time (float-time (current-time)))
+      ad-do-it)))
+
+;; (use-package lsp-ui
+;;   :init
+;;   (add-hook 'lsp-mode-hook 'lsp-ui-mode)
+;;   :custom
+;;   (lsp-ui-doc-enable nil))
 ;;------------------------------------------------------------------------------
 (set-language-environment "Japanese")
 (set-default-coding-systems 'utf-8)
@@ -281,7 +314,11 @@
 ;; rust-mode
 (use-package rustic
   :init
-  (setq rustic-flycheck-setup-mode-line-p nil))
+  (setq rustic-flycheck-setup-mode-line-p nil)
+  (add-hook 'rustic-mode-hook 'racer-mode)
+  :config
+  (use-package racer)
+  (use-package lsp-mode))
 ;; which key
 (use-package which-key
   :diminish which-key-mode
@@ -316,6 +353,13 @@
 (use-package nasm-mode
   :config
   (add-hook 'asm-mode-hook 'nasm-mode))
+(use-package yaml-mode
+  :config
+  (add-to-list 'auto-mode-alist '("\\.ya?ml$" . yaml-mode))
+  (define-key yaml-mode-map "\C-m" 'newline-and-indent))
+
+;; for tramp (ssh)
+(setq tramp-default-method "ssh")
 ;; end of file
 (provide 'init)
 ;;;
