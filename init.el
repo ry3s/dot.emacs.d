@@ -1,4 +1,4 @@
-2;;; package --- Summary
+;;; package --- Summary
 ;;; Commentary:
 ;;; Code:
 ;; from straight.el README
@@ -10,7 +10,7 @@
     (with-current-buffer
         (url-retrieve-synchronously
          "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-n         'silent 'inhibit-cookies)
+         'silent 'inhibit-cookies)
       (goto-char (point-max))
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
@@ -83,48 +83,6 @@ n         'silent 'inhibit-cookies)
   ;; mini-buffer のサイズ
   (setq ivy-height 30))
 
-(use-package lsp-mode
-  :init
-  (setq lsp-prefer-flymake :none)
-
-  :config
-  (use-package counsel-etags)
-  (use-package company-ctags)
-  (use-package find-file-in-project)
-  ;; enable log only for debug
-  (setq lsp-log-io nil)
-  ;; no real time syntax check
-  (setq lsp-diagnostic-package :none)
-  ;; handle yasnippet by myself
-  (setq lsp-enable-snippet nil)
-  ;; use `company-ctags' only
-  ;; Please note `company-lsp' is automatically enabled if installed
-  (setq lsp-enable-completion-at-point nil)
-  ;; turn off for better performance
-  (setq lsp-enable-symbol-highlighting nil)
-  ;; use ffip insted
-  (setq lsp-enable-links nil)
-  ;; auto restart lsp
-  (setq lsp-restart 'auto-restart)
-  ;; @see https://github.com/emacs-lsp/lsp-mode/pull/1498 and code related to auto configure.
-  ;; Require clients could be slow.
-  ;; I only load `lsp-clients' because it includes the js client which I'm interested
-  (setq lsp-client-packages '(lsp-clients))
-
-  ;; don't ping LSP lanaguage server too frequently
-  (defvar lsp-on-touch-time 0)
-  (defadvice lsp-on-change (around lsp-on-change-hack activate)
-    ;; don't run `lsp-on-change' too frequently
-    (when (> (- (float-time (current-time))
-                lsp-on-touch-time) 30) ;; 30 seconds
-      (setq lsp-on-touch-time (float-time (current-time)))
-      ad-do-it)))
-
-;; (use-package lsp-ui
-;;   :init
-;;   (add-hook 'lsp-mode-hook 'lsp-ui-mode)
-;;   :custom
-;;   (lsp-ui-doc-enable nil))
 ;;------------------------------------------------------------------------------
 (set-language-environment "Japanese")
 (set-default-coding-systems 'utf-8)
@@ -269,6 +227,14 @@ n         'silent 'inhibit-cookies)
 ;; Proof General
 (load "~/.emacs.d/lisp/PG/generic/proof-site")
 
+;; Rust
+(use-package lsp-mode)
+(use-package rustic)
+;; rust-modeで開かれる時があるのでrustic-modeを末尾に追加し直す
+(cl-delete-if (lambda (element) (equal (cdr element) 'rust-mode)) auto-mode-alist)
+(cl-delete-if (lambda (element) (equal (cdr element) 'rustic-mode)) auto-mode-alist)
+(add-to-list 'auto-mode-alist '("\\.rs$" . rustic-mode))
+
 ;; haskell intero
 (use-package intero
   :config (add-hook 'haskell-mode-hook 'intero-mode)
@@ -311,14 +277,7 @@ n         'silent 'inhibit-cookies)
          ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "multimarkdown"))
 
-;; rust-mode
-(use-package rustic
-  :init
-  (setq rustic-flycheck-setup-mode-line-p nil)
-  (add-hook 'rustic-mode-hook 'racer-mode)
-  :config
-  (use-package racer)
-  (use-package lsp-mode))
+
 ;; which key
 (use-package which-key
   :diminish which-key-mode
@@ -360,6 +319,7 @@ n         'silent 'inhibit-cookies)
 
 ;; for tramp (ssh)
 (setq tramp-default-method "ssh")
+
 ;; end of file
 (provide 'init)
 ;;;
