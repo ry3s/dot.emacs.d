@@ -1,8 +1,7 @@
 # -*- mode: snippet -*-
-# name: comp
-# key: comp
+# name: header
+# key: header
 # --
-
 use std::io::{stdin, Read, StdinLock};
 use std::str::FromStr;
 
@@ -27,11 +26,19 @@ impl<'a> Scanner<'a> {
     fn input<T: FromStr>(&mut self) -> T {
         self.read().unwrap()
     }
+
+    fn vec<T: FromStr>(&mut self, len: usize) -> Vec<T> {
+        (0..len).map(|_| self.input()).collect()
+    }
+
+    fn mat<T: FromStr>(&mut self, row: usize, col: usize) -> Vec<Vec<T>> {
+         (0..row).map(|_| self.vec(col)).collect()
+    }
 }
 
 fn main() {
     let cin = stdin();
     let cin = cin.lock();
     let mut sc = Scanner::new(cin);
-
+    $0
 }

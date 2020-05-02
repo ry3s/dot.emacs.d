@@ -66,7 +66,8 @@
   (flycheck-gcc-language-standard "c++17")
   (flycheck-python-flack8-executalbe "python3")
   (flyckeck-python-pycompile-executable "python3")
-  (flyckeck-python-pylint-executable "python3"))
+  (flyckeck-python-pylint-executable "python3")
+  )
 
 (use-package counsel
   :bind
@@ -83,13 +84,17 @@
   ;; mini-buffer のサイズ
   (setq ivy-height 30))
 
-;;------------------------------------------------------------------------------
+(use-package highlight-indent-guides
+  :config
+  (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+  (setq highlight-indent-guides-method 'character))
+;;============================================================================
 (set-language-environment "Japanese")
 (set-default-coding-systems 'utf-8)
 (set-terminal-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
-;;---------------------------------------------------------------------------
+;;============================================================================
 ;; font settings
 (create-fontset-from-ascii-font
  "Monaco-13:weight=normal:slant=normal"
@@ -229,7 +234,12 @@
 
 ;; Rust
 (use-package lsp-mode)
+(use-package company-lsp)
+(use-package lsp-ui
+  :config
+  (setq lsp-ui-doc-enable nil))
 (use-package rustic)
+
 ;; rust-modeで開かれる時があるのでrustic-modeを末尾に追加し直す
 (cl-delete-if (lambda (element) (equal (cdr element) 'rust-mode)) auto-mode-alist)
 (cl-delete-if (lambda (element) (equal (cdr element) 'rustic-mode)) auto-mode-alist)
@@ -275,6 +285,11 @@
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
+  :config
+  ;; (set-face-attribute 'markdown-code-face nil
+  ;;                     :inherit 'default
+  ;;                     :foreground "yellow")
+  (setq markdown-fontify-code-blocks-natively t)
   :init (setq markdown-command "multimarkdown"))
 
 
@@ -320,6 +335,27 @@
 ;; for tramp (ssh)
 (setq tramp-default-method "ssh")
 
+(use-package cobol-mode)
+(use-package dockerfile-mode
+  :config (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode)))
+;; for SWI-prolog
+(setq prolog-system 'swi)
+(add-to-list 'auto-mode-alist '("\\.swi\\'" . prolog-mode))
+
+;; TypeScript
+(use-package typescript-mode
+  :config
+  (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-mode)))
+
+;; JSON
+(use-package json-mode
+  :config
+  (add-hook 'js-mode-hook
+            (lambda ()
+              (make-local-variable 'js-indent-level)
+              (setq js-indent-level 4))))
+
+;; Go lang
+(use-package go-mode)
 ;; end of file
 (provide 'init)
-;;;
