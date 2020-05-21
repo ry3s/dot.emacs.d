@@ -18,13 +18,8 @@
 ;; use-package
 (straight-use-package 'use-package)
 
-;; use-packageをstraight.elにフォールバックする
+;; use-packageをstraight.elにフォールバックする (:straight t)
 (setq straight-use-package-by-default t)
-
-;; windows size
-(setq default-frame-alist
-      '((width . 100)
-        (height . 45)))
 
 ;;補完
 (use-package company
@@ -64,9 +59,9 @@
   :custom
   (flycheck-clang-language-standard "c++17")
   (flycheck-gcc-language-standard "c++17")
-  (flycheck-python-flack8-executalbe "python3")
-  (flyckeck-python-pycompile-executable "python3")
-  (flyckeck-python-pylint-executable "python3")
+  ;; (flycheck-python-flack8-executalbe "python3")
+  ;; (flyckeck-python-pycompile-executable "python3")
+  ;; (flyckeck-python-pylint-executable "python3")
   )
 
 (use-package counsel
@@ -84,17 +79,16 @@
   ;; mini-buffer のサイズ
   (setq ivy-height 30))
 
-(use-package highlight-indent-guides
-  :config
-  (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
-  (setq highlight-indent-guides-method 'character))
-;;============================================================================
+;; (use-package highlight-indent-guides
+;;   :config
+;;   (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+;;   (setq highlight-indent-guides-method 'bitmap))
+
 (set-language-environment "Japanese")
 (set-default-coding-systems 'utf-8)
 (set-terminal-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
-;;============================================================================
 ;; font settings
 (create-fontset-from-ascii-font
  "Monaco-13:weight=normal:slant=normal"
@@ -111,7 +105,7 @@
 (add-to-list 'default-frame-alist '(font . "fontset-monacohiragino"))
 (setq face-font-rescale-alist '(("Hiragino.*" . 1.0)))
 
-;; (add-to-list 'default-frame-alist '(font . "Monaco-13" ))
+(add-to-list 'default-frame-alist '(font . "Monaco-13" ))
 
 (setq mouse-drag-copy-region t)
 ;;スタートアップメッセージを表示しない
@@ -195,12 +189,41 @@
 (global-set-key "\C-x\C-b" 'buffer-menu)
 ;; back space の設定
 (global-set-key (kbd "C-h") 'delete-backward-char)
-;;------------------------------------------------------------------------------
-
+;; dired kb表示
+(setq dired-listing-switches "-alh")
 ;; for redo, undo
 (use-package redo+
   :config
   (global-set-key (kbd "C-M-/") 'redo))
+
+(use-package fill-column-indicator
+  :config
+  (setq fci-rule-column 80)
+  (setq fci-rule-color "gray")
+  )
+;; projectile
+(use-package projectile
+  :config
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+  (projectile-mode 1))
+;; Dired custom
+(use-package dired-subtree
+  :config
+  :bind (:map dired-mode-map
+              ("i" . dired-subtree-insert)
+              (";" . dired-subtree-remove)))
+
+;; (use-package dired+
+;;   :quelpa (dired+ :fetcher github :repo "emacsmirror/dired-plus")
+;;   :defer 1
+;;   :init
+;;   (setq diredp-hide-details-initially-flag nil)
+;;   (setq diredp-hide-details-propagate-flag nil)
+;;   :config
+;;   (diredp-toggle-find-file-reuse-dir 1)
+;;   (let ((gls "/usr/local/bin/gls"))
+;;     (if (file-exists-p gls) (setq insert-directory-program gls)))
+;;   )
 
 ;; irony (for C++)
 (use-package irony
@@ -237,13 +260,16 @@
 (use-package company-lsp)
 (use-package lsp-ui
   :config
+  (setq-default rustic-format-trigger 'on-save)
   (setq lsp-ui-doc-enable nil))
-(use-package rustic)
-
-;; rust-modeで開かれる時があるのでrustic-modeを末尾に追加し直す
-(cl-delete-if (lambda (element) (equal (cdr element) 'rust-mode)) auto-mode-alist)
-(cl-delete-if (lambda (element) (equal (cdr element) 'rustic-mode)) auto-mode-alist)
-(add-to-list 'auto-mode-alist '("\\.rs$" . rustic-mode))
+(use-package rustic
+  :config
+  (setq rustic-lsp-server 'rls)
+  ;; rust-modeで開かれる時があるのでrustic-modeを末尾に追加し直す
+  (cl-delete-if (lambda (element) (equal (cdr element) 'rust-mode)) auto-mode-alist)
+  (cl-delete-if (lambda (element) (equal (cdr element) 'rustic-mode)) auto-mode-alist)
+  (add-to-list 'auto-mode-alist '("\\.rs$" . rustic-mode))
+  )
 
 ;; haskell intero
 (use-package intero
@@ -273,6 +299,7 @@
   (add-hook 'tuareg-mode-hook 'merlin-mode))
 
 ;; pure script
+(use-package purescript-mode)
 (use-package psc-ide
   :init
   (add-hook 'purescript-mode-hook
@@ -285,11 +312,7 @@
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
-  :config
-  ;; (set-face-attribute 'markdown-code-face nil
-  ;;                     :inherit 'default
-  ;;                     :foreground "yellow")
-  (setq markdown-fontify-code-blocks-natively t)
+  :config (setq markdown-fontify-code-blocks-natively t)
   :init (setq markdown-command "multimarkdown"))
 
 
@@ -305,20 +328,20 @@
   (dimmer-mode t)
   (setq dimmer-fraction 0.1)
   :custom
-  (dimmer-configure-which-key)
-  )
+  (dimmer-configure-which-key))
+
 ;; elm
 (use-package elm-mode)
 
-;; purescript
-(use-package purescript-mode)
-
 ;; python
-(use-package company-jedi)
-(add-hook 'python-mode-hook
-          (lambda () (setq python-indent-offset 4))
-          (add-to-list 'company-backends 'company-jedi))
-(add-to-list 'auto-mode-alist '("\\\.py\\\'" . python-mode))
+(use-package elpy
+  :init
+  (advice-add 'python-mode :before 'elpy-enable)
+  :config
+  (setq elpy-rpc-virtualenv-path 'current)
+  (when (load "flycheck" t t)
+    (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+    (add-hook 'elpy-mode-hook 'flycheck-mode)))
 
 ;; magit
 (use-package magit
@@ -357,5 +380,6 @@
 
 ;; Go lang
 (use-package go-mode)
+
 ;; end of file
 (provide 'init)
