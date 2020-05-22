@@ -61,3 +61,4 @@ ac-comphist.dat
 elpy
 .lsp*
 .python-environments/
+projectile-bookmarks*
