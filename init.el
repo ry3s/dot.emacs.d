@@ -58,11 +58,7 @@
   :init (global-flycheck-mode)
   :custom
   (flycheck-clang-language-standard "c++17")
-  (flycheck-gcc-language-standard "c++17")
-  ;; (flycheck-python-flack8-executalbe "python3")
-  ;; (flyckeck-python-pycompile-executable "python3")
-  ;; (flyckeck-python-pylint-executable "python3")
-  )
+  (flycheck-gcc-language-standard "c++17"))
 
 (use-package counsel
   :bind
@@ -78,11 +74,6 @@
   (setq ivy-use-virtual-buffers nil)
   ;; mini-buffer のサイズ
   (setq ivy-height 30))
-
-;; (use-package highlight-indent-guides
-;;   :config
-;;   (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
-;;   (setq highlight-indent-guides-method 'bitmap))
 
 (set-language-environment "Japanese")
 (set-default-coding-systems 'utf-8)
@@ -170,8 +161,6 @@
 ;; 対応するカッコ
 (show-paren-mode 1)
 (setq show-paren-style 'parenthesis)
-;; (set-face-attribute 'show-paren-match nil
-;;                     :weight 'extra-bold)
 ;;shellの設定を引き継ぐ
 (use-package exec-path-from-shell
   :init (exec-path-from-shell-initialize))
@@ -206,24 +195,6 @@
   :config
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
   (projectile-mode 1))
-;; Dired custom
-(use-package dired-subtree
-  :config
-  :bind (:map dired-mode-map
-              ("i" . dired-subtree-insert)
-              (";" . dired-subtree-remove)))
-
-;; (use-package dired+
-;;   :quelpa (dired+ :fetcher github :repo "emacsmirror/dired-plus")
-;;   :defer 1
-;;   :init
-;;   (setq diredp-hide-details-initially-flag nil)
-;;   (setq diredp-hide-details-propagate-flag nil)
-;;   :config
-;;   (diredp-toggle-find-file-reuse-dir 1)
-;;   (let ((gls "/usr/local/bin/gls"))
-;;     (if (file-exists-p gls) (setq insert-directory-program gls)))
-;;   )
 
 ;; irony (for C++)
 (use-package irony
@@ -260,7 +231,7 @@
 (use-package company-lsp)
 (use-package lsp-ui
   :config
-  (setq-default rustic-format-trigger 'on-save)
+  ;; (setq-default rustic-format-trigger 'on-save)
   (setq lsp-ui-doc-enable nil))
 (use-package rustic
   :config
@@ -381,5 +352,5 @@
 ;; Go lang
 (use-package go-mode)
 
-;; end of file
 (provide 'init)
+;;; init.el ends here
