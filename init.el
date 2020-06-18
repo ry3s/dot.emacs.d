@@ -81,22 +81,7 @@
 (set-selection-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 ;; font settings
-(create-fontset-from-ascii-font
- "Monaco-13:weight=normal:slant=normal"
- nil
- "monacohiragino")
-
-(set-fontset-font
- "fontset-monacohiragino"
- 'unicode
- (font-spec :family "Hiragino Sans")
- nil
- 'append)
-
-(add-to-list 'default-frame-alist '(font . "fontset-monacohiragino"))
-(setq face-font-rescale-alist '(("Hiragino.*" . 1.0)))
-
-(add-to-list 'default-frame-alist '(font . "Monaco-13" ))
+(add-to-list 'default-frame-alist '(font . "Monaco for Powerline-13" ))
 
 (setq mouse-drag-copy-region t)
 ;;スタートアップメッセージを表示しない
