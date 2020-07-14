@@ -80,15 +80,14 @@
 (set-terminal-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
-;; font settings
+;; Font
 (add-to-list 'default-frame-alist '(font . "Monaco for Powerline-13" ))
-
 (setq mouse-drag-copy-region t)
-;;スタートアップメッセージを表示しない
+;; スタートアップメッセージを表示しない
 (setq inhibit-startup-message t)
-;;バックアップファイルを作らない
+;; バックアップファイルを作らない
 (setq make-backup-files nil)
-;;終了時にオートセーブファイルを削除
+;; 終了時にオートセーブファイルを削除
 (setq delete-auto-save-files t)
 ;; メニューバーを非表示
 (menu-bar-mode nil)
@@ -102,39 +101,29 @@
 (when (eq window-system 'ns)
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
   (add-to-list 'default-frame-alist '(ns-appearance . dark)))
-;;ビープ音と画面フラッシュを消す
+;; ビープ音と画面フラッシュを消す
 (setq ring-bell-function 'ignore)
-;;テーマ
-;; (use-package doom-themes
-;;   :custom
-;;   (doom-themes-enable-italic t)
-;;   (doom-thmes-enable-bold t)
-;;   :custom-face
-;;   (doom-modeline-bar ((t (:background "#6272a4"))))
-;;   :config
-;;   (load-theme 'doom-dracula t)
-;;   (doom-themes-neotree-config)
-;;   (doom-themes-org-config))
+;; テーマ
 (use-package base16-theme
   :config
   (load-theme 'base16-monokai t)
   (set-face-foreground 'font-lock-comment-face "#969079")
   (set-face-foreground 'font-lock-comment-delimiter-face "#969079"))
 
-;;カーソルの点滅をやめる
+;; カーソルの点滅をやめる
 (blink-cursor-mode 0)
-;;カーソル行のハイライト
+;; カーソル行のハイライト
 (global-hl-line-mode t)
-;;タブの挙動（左端ではインデント，それ以外はタブの挿入）
+;; タブの挙動（左端ではインデント，それ以外はタブの挿入）
 (setq tab-always-indent t)
-;;タブをスペースに
+;; タブをスペースに
 (setq-default tab-width 4
               indent-tabs-mode nil)
-;;列数を表示する
+;; 列数を表示する
 (column-number-mode t)
-;;行数を表示する
+;; 行数を表示する
 (global-display-line-numbers-mode)
-;;スクロールは１行ごと
+;; スクロールは１行ごと
 (setq scroll-conservatively 1)
 (setq scroll-preserve-screen-position 'always)
 ;;macのoptionをメタキィにする
@@ -146,10 +135,10 @@
 ;; 対応するカッコ
 (show-paren-mode 1)
 (setq show-paren-style 'parenthesis)
-;;shellの設定を引き継ぐ
+;; shellの設定を引き継ぐ
 (use-package exec-path-from-shell
   :init (exec-path-from-shell-initialize))
-;;最後に改行を入れる
+;; 最後に改行を入れる
 (setq require-final-newline t)
 ;; 自動で空白を削除
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
@@ -170,11 +159,6 @@
   :config
   (global-set-key (kbd "C-M-/") 'redo))
 
-(use-package fill-column-indicator
-  :config
-  (setq fci-rule-column 80)
-  (setq fci-rule-color "gray")
-  )
 ;; projectile
 (use-package projectile
   :config
@@ -209,25 +193,25 @@
               (setq indent-tabs-mode nil)
               (setq c-basic-offset 4))))
 ;; Proof General
-(load "~/.emacs.d/lisp/PG/generic/proof-site")
+;; (use-package proof-general)
+;; (load "~/.emacs.d/lisp/PG/generic/proof-site")
 
 ;; Rust
 (use-package lsp-mode)
 (use-package company-lsp)
 (use-package lsp-ui
   :config
-  ;; (setq-default rustic-format-trigger 'on-save)
   (setq lsp-ui-doc-enable nil))
 (use-package rustic
   :config
   (setq rustic-lsp-server 'rls)
-  ;; rust-modeで開かれる時があるのでrustic-modeを末尾に追加し直す
-  (cl-delete-if (lambda (element) (equal (cdr element) 'rust-mode)) auto-mode-alist)
-  (cl-delete-if (lambda (element) (equal (cdr element) 'rustic-mode)) auto-mode-alist)
   (add-to-list 'auto-mode-alist '("\\.rs$" . rustic-mode))
+  ;; rust-modeで開かれる時があるのでrustic-modeを末尾に追加し直す
+  ;;(cl-delete-if (lambda (element) (equal (cdr element) 'rust-mode)) auto-mode-alist)
+  ;;(cl-delete-if (lambda (element) (equal (cdr element) 'rustic-mode)) auto-mode-alist)
   )
 
-;; haskell intero
+;; Haskell
 (use-package intero
   :config (add-hook 'haskell-mode-hook 'intero-mode)
   :custom (haskell-stylish-on-save t))
@@ -247,22 +231,12 @@
   :config
   (dashboard-setup-startup-hook))
 
-;; OCaml
 (use-package tuareg
   :mode ("\\.ml\\'" . tuareg-mode))
 (use-package merlin
   :config
   (add-hook 'tuareg-mode-hook 'merlin-mode))
 
-;; pure script
-(use-package purescript-mode)
-(use-package psc-ide
-  :init
-  (add-hook 'purescript-mode-hook
-            (lambda ()
-              (psc-ide-mode)
-              (turn-on-purescript-indentation)))
-  (setq psc-ide-use-npm-bin t))
 (use-package markdown-mode
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
@@ -271,23 +245,9 @@
   :config (setq markdown-fontify-code-blocks-natively t)
   :init (setq markdown-command "multimarkdown"))
 
-
-;; which key
 (use-package which-key
   :diminish which-key-mode
   :hook (after-init . which-key-mode))
-(put 'downcase-region 'disabled nil)
-
-;; dimmer
-(use-package dimmer
-  :init
-  (dimmer-mode t)
-  (setq dimmer-fraction 0.1)
-  :custom
-  (dimmer-configure-which-key))
-
-;; elm
-(use-package elm-mode)
 
 ;; python
 (use-package elpy
@@ -299,34 +259,25 @@
     (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
     (add-hook 'elpy-mode-hook 'flycheck-mode)))
 
-;; magit
+
 (use-package magit
   :config (global-set-key (kbd "C-x g") 'magit-status))
-;; nasm
+
 (use-package nasm-mode
   :config
   (add-hook 'asm-mode-hook 'nasm-mode))
+
 (use-package yaml-mode
   :config
   (add-to-list 'auto-mode-alist '("\\.ya?ml$" . yaml-mode))
   (define-key yaml-mode-map "\C-m" 'newline-and-indent))
 
-;; for tramp (ssh)
-(setq tramp-default-method "ssh")
-
 (use-package cobol-mode)
 (use-package dockerfile-mode
-  :config (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode)))
-;; for SWI-prolog
-(setq prolog-system 'swi)
-(add-to-list 'auto-mode-alist '("\\.swi\\'" . prolog-mode))
-
-;; TypeScript
-(use-package typescript-mode
   :config
-  (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-mode)))
+  (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode)))
 
-;; JSON
+
 (use-package json-mode
   :config
   (add-hook 'js-mode-hook
@@ -334,7 +285,6 @@
               (make-local-variable 'js-indent-level)
               (setq js-indent-level 4))))
 
-;; Go lang
 (use-package go-mode)
 
 (provide 'init)
