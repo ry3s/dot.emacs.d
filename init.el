@@ -81,7 +81,8 @@
 (set-selection-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 ;; Font
-(add-to-list 'default-frame-alist '(font . "Monaco for Powerline-13" ))
+(set-frame-font "Monaco 13")
+;; (add-to-list 'default-frame-alist '(font . "Monaco for Powerline-13" ))
 (setq mouse-drag-copy-region t)
 ;; スタートアップメッセージを表示しない
 (setq inhibit-startup-message t)
@@ -149,7 +150,7 @@
 ;; GC
 (setq gc-cons-threshold 50000000)
 ;; buffer list を現在のウィンドウに表示
-(global-set-key "\C-x\C-b" 'buffer-menu)
+(global-set-key (kbd "C-x C-b") 'buffer-menu)
 ;; back space の設定
 (global-set-key (kbd "C-h") 'delete-backward-char)
 ;; dired kb表示
@@ -193,8 +194,7 @@
               (setq indent-tabs-mode nil)
               (setq c-basic-offset 4))))
 ;; Proof General
-;; (use-package proof-general)
-;; (load "~/.emacs.d/lisp/PG/generic/proof-site")
+(load "~/.emacs.d/lisp/PG/generic/proof-site")
 
 ;; Rust
 (use-package lsp-mode)
@@ -272,7 +272,6 @@
   (add-to-list 'auto-mode-alist '("\\.ya?ml$" . yaml-mode))
   (define-key yaml-mode-map "\C-m" 'newline-and-indent))
 
-(use-package cobol-mode)
 (use-package dockerfile-mode
   :config
   (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode)))
