@@ -76,13 +76,22 @@
   (setq ivy-height 30))
 
 (set-language-environment "Japanese")
+(prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
 (set-terminal-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
-(prefer-coding-system 'utf-8)
+
 ;; Font
-(set-frame-font "Monaco 13")
-;; (add-to-list 'default-frame-alist '(font . "Monaco for Powerline-13" ))
+;; (set-frame-font "Monaco 13")
+(set-face-attribute 'default nil :family "Monaco" :height 130)
+(set-fontset-font "fontset-default"
+                  'japanese-jisx0208
+                  '("Hiragino Kaku Gothic ProN"))
+(set-fontset-font "fontset-default"
+                  'katakana-jisx0201
+                  '("Hiragino Kaku Gothic ProN"))
+
+;; (add-to-list 'default-frame-alist '(font . "Monaco-13" ))
 (setq mouse-drag-copy-region t)
 ;; スタートアップメッセージを表示しない
 (setq inhibit-startup-message t)
@@ -160,6 +169,14 @@
   :config
   (global-set-key (kbd "C-M-/") 'redo))
 
+;; (use-package tabbar
+;;   :config
+;;   (tabbar-mode 1)
+;;   (tabbar-mwheel-mode -1)
+;;   (setq tabbar-buffer-groups-function nil)
+;;   (setq tabbar-use-images t)
+;;   (global-set-key (kbd "M-<right>") 'tabbar-forward-tab)
+;;   (global-set-key (kbd "M-<left>") 'tabbar-backward-tab))
 ;; projectile
 (use-package projectile
   :config
@@ -232,7 +249,10 @@
   (dashboard-setup-startup-hook))
 
 (use-package tuareg
-  :mode ("\\.ml\\'" . tuareg-mode))
+  :mode
+  ("\\.ml\\'" . tuareg-mode)
+  ("\\.mll\\'" . tuareg-mode)
+  ("\\.mly\\'" . tuareg-mode))
 (use-package merlin
   :config
   (add-hook 'tuareg-mode-hook 'merlin-mode))
@@ -286,5 +306,14 @@
 
 (use-package go-mode)
 
+
+(defun swap-screen ()
+  "Swap two screen, leaving cursor at current window."
+  (interactive)
+  (let ((thiswin (selected-window))
+        (nextbuf (window-buffer (next-window))))
+    (set-window-buffer (next-window) (window-buffer))
+    (set-window-buffer thiswin nextbuf)))
+(global-set-key [f2] 'swap-screen)
 (provide 'init)
 ;;; init.el ends here
