@@ -148,6 +148,7 @@
 ;; shellの設定を引き継ぐ
 (use-package exec-path-from-shell
   :init (exec-path-from-shell-initialize))
+(add-to-list 'load-path "~/.emacs.d/lisp/satysfi")
 ;; 最後に改行を入れる
 (setq require-final-newline t)
 ;; 自動で空白を削除
@@ -169,14 +170,6 @@
   :config
   (global-set-key (kbd "C-M-/") 'redo))
 
-;; (use-package tabbar
-;;   :config
-;;   (tabbar-mode 1)
-;;   (tabbar-mwheel-mode -1)
-;;   (setq tabbar-buffer-groups-function nil)
-;;   (setq tabbar-use-images t)
-;;   (global-set-key (kbd "M-<right>") 'tabbar-forward-tab)
-;;   (global-set-key (kbd "M-<left>") 'tabbar-backward-tab))
 ;; projectile
 (use-package projectile
   :config
@@ -221,7 +214,7 @@
   (setq lsp-ui-doc-enable nil))
 (use-package rustic
   :config
-  (setq rustic-lsp-server 'rls)
+  (setq rustic-lsp-server 'rust-analyzer)
   (add-to-list 'auto-mode-alist '("\\.rs$" . rustic-mode))
   ;; rust-modeで開かれる時があるのでrustic-modeを末尾に追加し直す
   ;;(cl-delete-if (lambda (element) (equal (cdr element) 'rust-mode)) auto-mode-alist)
@@ -315,5 +308,14 @@
     (set-window-buffer (next-window) (window-buffer))
     (set-window-buffer thiswin nextbuf)))
 (global-set-key [f2] 'swap-screen)
+
+
+(require 'satysfi)
+(add-to-list 'auto-mode-alist '("\\.saty$" . satysfi-mode))
+(add-to-list 'auto-mode-alist '("\\.satyh$" . satysfi-mode))
+(setq satysfi-command "satysfi")
+  ; set the command for typesetting (default: "satysfi -b")
+;; (setq satysfi-pdf-viewer-command "sumatrapdf")
+  ; set the command for opening PDF files (default: "open")
 (provide 'init)
 ;;; init.el ends here
