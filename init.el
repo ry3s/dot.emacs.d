@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t -*-
 ;;; package --- Summary
 ;;; Commentary:
 ;;; Code:
@@ -55,10 +56,7 @@
 
 ;; flycheck
 (use-package flycheck
-  :init (global-flycheck-mode)
-  :custom
-  (flycheck-clang-language-standard "c++17")
-  (flycheck-gcc-language-standard "c++17"))
+  :init (global-flycheck-mode))
 
 (use-package counsel
   :bind
@@ -91,6 +89,7 @@
                   'katakana-jisx0201
                   '("Hiragino Kaku Gothic ProN"))
 
+(set-frame-size (selected-frame) 120 57)
 ;; (add-to-list 'default-frame-alist '(font . "Monaco-13" ))
 (setq mouse-drag-copy-region t)
 ;; スタートアップメッセージを表示しない
@@ -148,7 +147,7 @@
 ;; shellの設定を引き継ぐ
 (use-package exec-path-from-shell
   :init (exec-path-from-shell-initialize))
-(add-to-list 'load-path "~/.emacs.d/lisp/satysfi")
+;; (add-to-list 'load-path "~/.emacs.d/lisp/satysfi")
 ;; 最後に改行を入れる
 (setq require-final-newline t)
 ;; 自動で空白を削除
@@ -183,8 +182,8 @@
   (add-hook 'c-mode-common-hook 'irony-mode)
   ;; C++言語用にコンパイルオプションを設定する.
   (add-hook 'c++-mode-hook
-            '(lambda ()
-               (setq irony-additional-clang-options '("-std=c++14" "-Wall" "-Wextra"))))
+            (lambda ()
+              (setq irony-additional-clang-options '("-std=c++14" "-Wall" "-Wextra"))))
   (add-hook 'c++mode-hook
             (lambda ()
               (setq flyckeck-clang-include-path
@@ -309,13 +308,5 @@
     (set-window-buffer thiswin nextbuf)))
 (global-set-key [f2] 'swap-screen)
 
-
-(require 'satysfi)
-(add-to-list 'auto-mode-alist '("\\.saty$" . satysfi-mode))
-(add-to-list 'auto-mode-alist '("\\.satyh$" . satysfi-mode))
-(setq satysfi-command "satysfi")
-  ; set the command for typesetting (default: "satysfi -b")
-;; (setq satysfi-pdf-viewer-command "sumatrapdf")
-  ; set the command for opening PDF files (default: "open")
 (provide 'init)
 ;;; init.el ends here
