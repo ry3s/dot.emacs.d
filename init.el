@@ -1,4 +1,4 @@
-;; -*- lexical-binding: t -*-
+;;; -*- lexical-binding: t -*-
 ;;; package --- Summary
 ;;; Commentary:
 ;;; Code:
@@ -18,7 +18,6 @@
 
 ;; use-package
 (straight-use-package 'use-package)
-
 ;; use-packageをstraight.elにフォールバックする (:straight t)
 (setq straight-use-package-by-default t)
 
@@ -69,7 +68,7 @@
   ("C-x s" . swiper)
   :config
   (ivy-mode 1)
-  (setq ivy-use-virtual-buffers nil)
+  (setq ivy-use-virtual-buffers t)
   ;; mini-buffer のサイズ
   (setq ivy-height 30))
 
@@ -81,6 +80,7 @@
 
 ;; Font
 ;; (set-frame-font "Monaco 13")
+(set-face-attribute 'fixed-pitch nil :family "Monaco")
 (set-face-attribute 'default nil :family "Monaco" :height 130)
 (set-fontset-font "fontset-default"
                   'japanese-jisx0208
@@ -115,10 +115,10 @@
 ;; テーマ
 (use-package base16-theme
   :config
-  (load-theme 'base16-monokai t)
-  (set-face-foreground 'font-lock-comment-face "#969079")
-  (set-face-foreground 'font-lock-comment-delimiter-face "#969079"))
-
+  (load-theme 'base16-default-dark t)
+  ;; (set-face-foreground 'font-lock-comment-face "#969079")
+  ;; (set-face-foreground 'font-lock-comment-delimiter-face "#969079")
+  )
 ;; カーソルの点滅をやめる
 (blink-cursor-mode 0)
 ;; カーソル行のハイライト
@@ -133,7 +133,7 @@
 ;; 行数を表示する
 (global-display-line-numbers-mode)
 ;; スクロールは１行ごと
-(setq scroll-conservatively 1)
+;;(setq scroll-conservatively 1)
 (setq scroll-preserve-screen-position 'always)
 ;;macのoptionをメタキィにする
 (setq mac-option-modifier 'meta)
@@ -147,7 +147,6 @@
 ;; shellの設定を引き継ぐ
 (use-package exec-path-from-shell
   :init (exec-path-from-shell-initialize))
-;; (add-to-list 'load-path "~/.emacs.d/lisp/satysfi")
 ;; 最後に改行を入れる
 (setq require-final-newline t)
 ;; 自動で空白を削除
@@ -168,6 +167,11 @@
 (use-package redo+
   :config
   (global-set-key (kbd "C-M-/") 'redo))
+
+;; LSP
+(use-package lsp-mode)
+(use-package lsp-ui)
+(use-package company-lsp)
 
 ;; projectile
 (use-package projectile
@@ -190,7 +194,6 @@
                     (list ("/opt/local/include")))))
   (add-hook 'irony-mode-hook 'irony-cdb-autosetup-cmpile-options))
 (use-package company-irony
-  :defer t
   :config
   ;; companyの補完のバックエンドにironyを使用する.
   (add-to-list 'company-backends '(company-irony-c-headers company-irony)))
@@ -206,24 +209,18 @@
 (load "~/.emacs.d/lisp/PG/generic/proof-site")
 
 ;; Rust
-(use-package lsp-mode)
-(use-package company-lsp)
-(use-package lsp-ui
-  :config
-  (setq lsp-ui-doc-enable nil))
 (use-package rustic
   :config
-  (setq rustic-lsp-server 'rust-analyzer)
-  (add-to-list 'auto-mode-alist '("\\.rs$" . rustic-mode))
-  ;; rust-modeで開かれる時があるのでrustic-modeを末尾に追加し直す
-  ;;(cl-delete-if (lambda (element) (equal (cdr element) 'rust-mode)) auto-mode-alist)
-  ;;(cl-delete-if (lambda (element) (equal (cdr element) 'rustic-mode)) auto-mode-alist)
-  )
+  (setq rustic-lsp-server 'rust-analyzer))
 
 ;; Haskell
-(use-package intero
-  :config (add-hook 'haskell-mode-hook 'intero-mode)
-  :custom (haskell-stylish-on-save t))
+;; (use-package intero
+;;   :config (add-hook 'haskell-mode-hook 'intero-mode)
+;;   :custom (haskell-stylish-on-save t))
+(use-package lsp-haskell
+  :config
+  ;; (add-hook 'haskell-mode-hook #'lsp)
+  (setq lsp-haskell-process-path-hie "haskell-language-server-wrapper"))
 
 ;; yasnippet
 (use-package yasnippet
@@ -254,7 +251,10 @@
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
-  :config (setq markdown-fontify-code-blocks-natively t)
+  :config
+  (setq markdown-fontify-code-blocks-natively nil)
+  ;; Do not change font in code blocks
+  ;;(set-face-attribute 'markdown-code-face nil :inherit 'default)
   :init (setq markdown-command "multimarkdown"))
 
 (use-package which-key
@@ -310,3 +310,4 @@
 
 (provide 'init)
 ;;; init.el ends here
+(put 'upcase-region 'disabled nil)
