@@ -1,5 +1,4 @@
-;;; -*- lexical-binding: t -*-
-;;; package --- Summary
+;;; package --- Init.el -*- lexical-binding: t -*-
 ;;; Commentary:
 ;;; Code:
 ;; from straight.el README
@@ -21,7 +20,7 @@
 ;; use-packageをstraight.elにフォールバックする (:straight t)
 (setq straight-use-package-by-default t)
 
-;;補完
+;; Completion framework
 (use-package company
   :init
   (setq company-selection-wrap-around t)
@@ -51,7 +50,12 @@
   (edit-category-table-for-company-dabbrev)
   (setq company-dabbrev-char-regexp "\\cs")
   ;; すべてのバッファで有効にする
+  (setq company-minimum-prefix-length 2)
   (global-company-mode))
+
+;; Company front-end with icons
+(use-package company-box
+  :hook (company-mode . company-box-mode))
 
 ;; flycheck
 (use-package flycheck
@@ -63,6 +67,14 @@
   ("C-x C-m" . counsel-M-x)
   ("C-x C-f" . counsel-find-file))
 
+(use-package counsel-osx-app
+  :config
+  (global-set-key (kbd "C-M-1") 'counsel-osx-app)
+  (with-eval-after-load "counsel-osx-app"
+    (custom-set-variables
+     '(counsel-osx-app-location
+       '("/Applications" "/Applications/Utilities" "/System/Applications" )))))
+
 (use-package ivy
   :bind
   ("C-x s" . swiper)
@@ -71,6 +83,13 @@
   (setq ivy-use-virtual-buffers t)
   ;; mini-buffer のサイズ
   (setq ivy-height 30))
+(use-package all-the-icons-ivy-rich
+  :init (all-the-icons-ivy-rich-mode 1)
+  :config (setq all-the-icons-ivy-rich-icon-size 1.0))
+
+(use-package ivy-rich
+  :init (ivy-rich-mode 1)
+  :config (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-arrow))
 
 (set-language-environment "Japanese")
 (prefer-coding-system 'utf-8)
@@ -78,8 +97,7 @@
 (set-terminal-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
 
-;; Font
-;; (set-frame-font "Monaco 13")
+;;  Font
 (set-face-attribute 'fixed-pitch nil :family "Monaco")
 (set-face-attribute 'default nil :family "Monaco" :height 130)
 (set-fontset-font "fontset-default"
@@ -89,8 +107,7 @@
                   'katakana-jisx0201
                   '("Hiragino Kaku Gothic ProN"))
 
-(set-frame-size (selected-frame) 120 57)
-;; (add-to-list 'default-frame-alist '(font . "Monaco-13" ))
+(setq default-frame-alist '((width . 120) (height . 53)))
 (setq mouse-drag-copy-region t)
 ;; スタートアップメッセージを表示しない
 (setq inhibit-startup-message t)
@@ -116,9 +133,8 @@
 (use-package base16-theme
   :config
   (load-theme 'base16-default-dark t)
-  ;; (set-face-foreground 'font-lock-comment-face "#969079")
-  ;; (set-face-foreground 'font-lock-comment-delimiter-face "#969079")
-  )
+  ;; (set-face-foreground 'font-lock-comment-face "#585858")
+  (set-face-foreground 'font-lock-comment-delimiter-face "#585858"))
 ;; カーソルの点滅をやめる
 (blink-cursor-mode 0)
 ;; カーソル行のハイライト
@@ -171,7 +187,11 @@
 ;; LSP
 (use-package lsp-mode)
 (use-package lsp-ui)
-(use-package company-lsp)
+
+;; debug adapter protocol
+(use-package dap-mode
+  :config
+  (setq dap-auto-configure-features '(sessions locals controls tooltip)))
 
 ;; projectile
 (use-package projectile
@@ -190,7 +210,7 @@
               (setq irony-additional-clang-options '("-std=c++14" "-Wall" "-Wextra"))))
   (add-hook 'c++mode-hook
             (lambda ()
-              (setq flyckeck-clang-include-path
+              (setq flycheck-clang-include-path
                     (list ("/opt/local/include")))))
   (add-hook 'irony-mode-hook 'irony-cdb-autosetup-cmpile-options))
 (use-package company-irony
@@ -211,7 +231,7 @@
 ;; Rust
 (use-package rustic
   :config
-  (setq rustic-lsp-server 'rust-analyzer))
+  (setq rustic-lsp-server 'rls))
 
 ;; Haskell
 ;; (use-package intero
@@ -254,7 +274,7 @@
   :config
   (setq markdown-fontify-code-blocks-natively nil)
   ;; Do not change font in code blocks
-  ;;(set-face-attribute 'markdown-code-face nil :inherit 'default)
+  ;; (set-face-attribute 'markdown-code-face nil :inherit 'default)
   :init (setq markdown-command "multimarkdown"))
 
 (use-package which-key
@@ -296,8 +316,15 @@
               (make-local-variable 'js-indent-level)
               (setq js-indent-level 4))))
 
-(use-package go-mode)
-
+(use-package go-mode
+  :config
+  (add-hook 'go-mode-hook #'lsp)
+  (add-hook 'go-mode-hook
+            (lambda ()
+              (setq indent-tabs-mode t)
+              (setq tab-width 4)
+              (add-hook 'before-save-hook #'lsp-format-buffer t t)
+              (add-hook 'before-save-hook #'lsp-organize-imports t t))))
 
 (defun swap-screen ()
   "Swap two screen, leaving cursor at current window."
