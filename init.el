@@ -50,7 +50,7 @@
   (edit-category-table-for-company-dabbrev)
   (setq company-dabbrev-char-regexp "\\cs")
   ;; すべてのバッファで有効にする
-  (setq company-minimum-prefix-length 2)
+  ;; (setq company-minimum-prefix-length 2)
   (global-company-mode))
 
 ;; Company front-end with icons
@@ -130,11 +130,16 @@
 ;; ビープ音と画面フラッシュを消す
 (setq ring-bell-function 'ignore)
 ;; テーマ
-(use-package base16-theme
+;; (use-package base16-theme
+;;   :config
+;;   (load-theme 'base16-default-dark t)
+;;   ;; (set-face-foreground 'font-lock-comment-face "#585858")
+;;   (set-face-foreground 'font-lock-comment-delimiter-face "#585858"))
+(use-package doom-themes
   :config
-  (load-theme 'base16-default-dark t)
-  ;; (set-face-foreground 'font-lock-comment-face "#585858")
-  (set-face-foreground 'font-lock-comment-delimiter-face "#585858"))
+  (setq doom-themes-enable-bold t)
+  (setq doom-themes-enable-italic nil)
+  (load-theme 'doom-one t))
 ;; カーソルの点滅をやめる
 (blink-cursor-mode 0)
 ;; カーソル行のハイライト
@@ -173,6 +178,8 @@
 (setq-default bidi-display-reordering nil)
 ;; GC
 (setq gc-cons-threshold 50000000)
+;; increase the amoutn of data which emacs reads from the processs
+(setq read-process-output-max (* 1024 1024 1024))
 ;; buffer list を現在のウィンドウに表示
 (global-set-key (kbd "C-x C-b") 'buffer-menu)
 ;; back space の設定
@@ -185,7 +192,9 @@
   (global-set-key (kbd "C-M-/") 'redo))
 
 ;; LSP
-(use-package lsp-mode)
+(use-package lsp-mode
+  :config (setq lsp-completion-provider :capf))
+
 (use-package lsp-ui)
 
 ;; debug adapter protocol
@@ -197,7 +206,21 @@
 (use-package projectile
   :config
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-  (projectile-mode 1))
+  (projectile-mode t))
+(use-package counsel-projectile
+  :config
+  (setq projectile-completion-system 'ivy)
+  (counsel-projectile-mode 1))
+
+;; eglot
+;; (defun project-root (project)
+;;   (car (project-roots project)))
+
+;; (defun my-projectile-project-find-function (dir)
+;;     (let ((root (projectile-project-root dir)))
+;;       (and root (cons 'transient root))))
+;; (with-eval-after-load 'project
+;;     (add-to-list 'project-find-functions 'my-projectile-project-find-function))
 
 ;; irony (for C++)
 (use-package irony
@@ -316,8 +339,17 @@
               (make-local-variable 'js-indent-level)
               (setq js-indent-level 4))))
 
+;; (use-package eglot
+;;   :config
+;;   (define-key eglot-mode-map (kbd "M-.") 'xref-find-definitions)
+;;   (define-key eglot-mode-map (kbd "M-,") 'pop-tag-mark)
+;;   (add-to-list 'eglot-server-programs '(go-mode . ("gopls")))
+;;   (add-hook 'go-mode-hook #'eglot-ensure))
+
 (use-package go-mode
   :config
+  ;; (setq gofmt-command "goimports")
+  ;; (add-hook 'before-save-hook 'gofmt-before-save)
   (add-hook 'go-mode-hook #'lsp)
   (add-hook 'go-mode-hook
             (lambda ()
