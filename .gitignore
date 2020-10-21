@@ -62,3 +62,5 @@ elpy
 .lsp*
 .python-environments/
 projectile-bookmarks*
+irony
+.dap-breakpoints

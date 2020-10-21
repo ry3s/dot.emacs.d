@@ -130,11 +130,6 @@
 ;; ビープ音と画面フラッシュを消す
 (setq ring-bell-function 'ignore)
 ;; テーマ
-;; (use-package base16-theme
-;;   :config
-;;   (load-theme 'base16-default-dark t)
-;;   ;; (set-face-foreground 'font-lock-comment-face "#585858")
-;;   (set-face-foreground 'font-lock-comment-delimiter-face "#585858"))
 (use-package doom-themes
   :config
   (setq doom-themes-enable-bold t)
@@ -176,6 +171,8 @@
 (setq confirm-kill-emacs 'y-or-n-p)
 ;; 右から左に読む言語に対応させないことで描画高速化
 (setq-default bidi-display-reordering nil)
+(setq default-directory "~/")
+(setq command-line-default-directory "~/")
 ;; GC
 (setq gc-cons-threshold 50000000)
 ;; increase the amoutn of data which emacs reads from the processs
@@ -212,16 +209,6 @@
   (setq projectile-completion-system 'ivy)
   (counsel-projectile-mode 1))
 
-;; eglot
-;; (defun project-root (project)
-;;   (car (project-roots project)))
-
-;; (defun my-projectile-project-find-function (dir)
-;;     (let ((root (projectile-project-root dir)))
-;;       (and root (cons 'transient root))))
-;; (with-eval-after-load 'project
-;;     (add-to-list 'project-find-functions 'my-projectile-project-find-function))
-
 ;; irony (for C++)
 (use-package irony
   :init
@@ -257,12 +244,10 @@
   (setq rustic-lsp-server 'rls))
 
 ;; Haskell
-;; (use-package intero
-;;   :config (add-hook 'haskell-mode-hook 'intero-mode)
-;;   :custom (haskell-stylish-on-save t))
 (use-package lsp-haskell
   :config
-  ;; (add-hook 'haskell-mode-hook #'lsp)
+  (add-hook 'haskell-mode-hook #'lsp)
+  (setq haskell-stylish-on-save t)
   (setq lsp-haskell-process-path-hie "haskell-language-server-wrapper"))
 
 ;; yasnippet
@@ -304,7 +289,6 @@
   :diminish which-key-mode
   :hook (after-init . which-key-mode))
 
-;; python
 (use-package elpy
   :init
   (advice-add 'python-mode :before 'elpy-enable)
@@ -338,13 +322,6 @@
             (lambda ()
               (make-local-variable 'js-indent-level)
               (setq js-indent-level 4))))
-
-;; (use-package eglot
-;;   :config
-;;   (define-key eglot-mode-map (kbd "M-.") 'xref-find-definitions)
-;;   (define-key eglot-mode-map (kbd "M-,") 'pop-tag-mark)
-;;   (add-to-list 'eglot-server-programs '(go-mode . ("gopls")))
-;;   (add-hook 'go-mode-hook #'eglot-ensure))
 
 (use-package go-mode
   :config
