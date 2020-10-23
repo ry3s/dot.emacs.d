@@ -1,4 +1,4 @@
-;;; package --- Init.el -*- lexical-binding: t -*-
+;;; package --- My init file
 ;;; Commentary:
 ;;; Code:
 ;; from straight.el README
@@ -343,6 +343,11 @@
     (set-window-buffer (next-window) (window-buffer))
     (set-window-buffer thiswin nextbuf)))
 (global-set-key [f2] 'swap-screen)
+
+;; tramp
+(defadvice tramp-handle-vc-registered (around tramp-handle-vc-registered-around activate)
+  (let ((vc-handled-backends '(SVN Git))) ad-do-it))
+;; default '(RCS CVS SVN SCCS Bzr Git Hg Mtn Arch)
 
 (provide 'init)
 ;;; init.el ends here
