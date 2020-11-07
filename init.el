@@ -67,21 +67,12 @@
   ("C-x C-m" . counsel-M-x)
   ("C-x C-f" . counsel-find-file))
 
-(use-package counsel-osx-app
-  :config
-  (global-set-key (kbd "C-M-1") 'counsel-osx-app)
-  (with-eval-after-load "counsel-osx-app"
-    (custom-set-variables
-     '(counsel-osx-app-location
-       '("/Applications" "/Applications/Utilities" "/System/Applications" )))))
-
 (use-package ivy
   :bind
   ("C-x s" . swiper)
   :config
   (ivy-mode 1)
   (setq ivy-use-virtual-buffers t)
-  ;; mini-buffer のサイズ
   (setq ivy-height 30))
 (use-package all-the-icons-ivy-rich
   :init (all-the-icons-ivy-rich-mode 1)
@@ -139,7 +130,7 @@
 (blink-cursor-mode 0)
 ;; カーソル行のハイライト
 (global-hl-line-mode t)
-;; タブの挙動（左端ではインデント，それ以外はタブの挿入）
+;; TABキーの挙動
 (setq tab-always-indent t)
 ;; タブをスペースに
 (setq-default tab-width 4
@@ -149,7 +140,6 @@
 ;; 行数を表示する
 (global-display-line-numbers-mode)
 ;; スクロールは１行ごと
-;;(setq scroll-conservatively 1)
 (setq scroll-preserve-screen-position 'always)
 ;;macのoptionをメタキィにする
 (setq mac-option-modifier 'meta)
@@ -203,7 +193,8 @@
 (use-package projectile
   :config
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-  (projectile-mode t))
+  ;; (projectile-mode t)
+  )
 (use-package counsel-projectile
   :config
   (setq projectile-completion-system 'ivy)
@@ -235,13 +226,14 @@
               (setq c-default-style "k&r")
               (setq indent-tabs-mode nil)
               (setq c-basic-offset 4))))
+
 ;; Proof General
 (load "~/.emacs.d/lisp/PG/generic/proof-site")
 
 ;; Rust
 (use-package rustic
   :config
-  (setq rustic-lsp-server 'rls))
+  (setq rustic-lsp-server 'rustic-analyzer))
 
 ;; Haskell
 (use-package lsp-haskell
@@ -267,9 +259,8 @@
 
 (use-package tuareg
   :mode
-  ("\\.ml\\'" . tuareg-mode)
-  ("\\.mll\\'" . tuareg-mode)
-  ("\\.mly\\'" . tuareg-mode))
+  ("\\.ml\\'" . tuareg-mode))
+
 (use-package merlin
   :config
   (add-hook 'tuareg-mode-hook 'merlin-mode))
@@ -281,8 +272,6 @@
          ("\\.markdown\\'" . markdown-mode))
   :config
   (setq markdown-fontify-code-blocks-natively nil)
-  ;; Do not change font in code blocks
-  ;; (set-face-attribute 'markdown-code-face nil :inherit 'default)
   :init (setq markdown-command "multimarkdown"))
 
 (use-package which-key
@@ -298,7 +287,6 @@
     (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
     (add-hook 'elpy-mode-hook 'flycheck-mode)))
 
-
 (use-package magit
   :config (global-set-key (kbd "C-x g") 'magit-status))
 
@@ -309,12 +297,11 @@
 (use-package yaml-mode
   :config
   (add-to-list 'auto-mode-alist '("\\.ya?ml$" . yaml-mode))
-  (define-key yaml-mode-map "\C-m" 'newline-and-indent))
+  (define-key yaml-mode-map (kbd "C-m") 'newline-and-indent))
 
 (use-package dockerfile-mode
   :config
   (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode)))
-
 
 (use-package json-mode
   :config
@@ -325,8 +312,6 @@
 
 (use-package go-mode
   :config
-  ;; (setq gofmt-command "goimports")
-  ;; (add-hook 'before-save-hook 'gofmt-before-save)
   (add-hook 'go-mode-hook #'lsp)
   (add-hook 'go-mode-hook
             (lambda ()
@@ -343,11 +328,6 @@
     (set-window-buffer (next-window) (window-buffer))
     (set-window-buffer thiswin nextbuf)))
 (global-set-key [f2] 'swap-screen)
-
-;; tramp
-(defadvice tramp-handle-vc-registered (around tramp-handle-vc-registered-around activate)
-  (let ((vc-handled-backends '(SVN Git))) ad-do-it))
-;; default '(RCS CVS SVN SCCS Bzr Git Hg Mtn Arch)
 
 (provide 'init)
 ;;; init.el ends here
