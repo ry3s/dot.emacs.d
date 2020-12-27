@@ -64,3 +64,5 @@ elpy
 projectile-bookmarks*
 irony
 .dap-breakpoints
+.cache
+workspace

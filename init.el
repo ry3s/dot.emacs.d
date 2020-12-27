@@ -1,4 +1,4 @@
-;;; package --- My init file
+;; package --- My init file
 ;;; Commentary:
 ;;; Code:
 ;; from straight.el README
@@ -88,7 +88,7 @@
 (set-terminal-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
 
-;;  Font
+;; Font
 (set-face-attribute 'fixed-pitch nil :family "Monaco")
 (set-face-attribute 'default nil :family "Monaco" :height 130)
 (set-fontset-font "fontset-default"
@@ -124,7 +124,7 @@
 (use-package doom-themes
   :config
   (setq doom-themes-enable-bold t)
-  (setq doom-themes-enable-italic nil)
+  (setq doom-themes-enable-italic t)
   (load-theme 'doom-one t))
 ;; カーソルの点滅をやめる
 (blink-cursor-mode 0)
@@ -165,6 +165,7 @@
 (setq command-line-default-directory "~/")
 ;; GC
 (setq gc-cons-threshold 50000000)
+(setq garbage-collection-messages t)
 ;; increase the amoutn of data which emacs reads from the processs
 (setq read-process-output-max (* 1024 1024 1024))
 ;; buffer list を現在のウィンドウに表示
@@ -204,7 +205,7 @@
 (use-package irony
   :init
   (add-hook 'c++-mode-hook 'irony-mode)
-  (add-hook 'c-mode-common-hook 'irony-mode)
+  (add-hook 'c-mode-hook 'irony-mode)
   ;; C++言語用にコンパイルオプションを設定する.
   (add-hook 'c++-mode-hook
             (lambda ()
@@ -252,14 +253,24 @@
               ("C-x i v" . yas-visit-snippet-file)
               ("C-x i l" . yas-describe-tables)
               ("C-x i g" . yas-reload-all)))
+(use-package yasnippet-snippets)
 
 (use-package dashboard
   :config
   (dashboard-setup-startup-hook))
 
+;; ## added by OPAM user-setup for emacs / base ## 56ab50dc8996d2bb95e7856a6eddb17b ## you can edit, but keep this line
+(require 'opam-user-setup "~/.emacs.d/opam-user-setup.el")
+;; ## end of OPAM user-setup addition for emacs / base ## keep this line
+
+(require 'ocamlformat)
 (use-package tuareg
   :mode
-  ("\\.ml\\'" . tuareg-mode))
+  ("\\.ml\\'" . tuareg-mode)
+  :config
+  (add-hook 'tuareg-mode-hook
+            (lambda ()
+              (add-hook 'before-save-hook #'ocamlformat-before-save))))
 
 (use-package merlin
   :config
@@ -277,6 +288,9 @@
 (use-package which-key
   :diminish which-key-mode
   :hook (after-init . which-key-mode))
+
+(use-package lsp-java
+  :config (add-hook 'java-mode-hook #'lsp))
 
 (use-package elpy
   :init
@@ -303,6 +317,20 @@
   :config
   (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode)))
 
+(use-package web-mode
+  :config
+  (add-hook 'web-mode-hook
+            (lambda ()
+              (setq web-mode-markup-indent-offset 2)))
+  (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
+
 (use-package json-mode
   :config
   (add-hook 'js-mode-hook
@@ -328,6 +356,11 @@
     (set-window-buffer (next-window) (window-buffer))
     (set-window-buffer thiswin nextbuf)))
 (global-set-key [f2] 'swap-screen)
+
+(use-package elm-mode
+  :config
+  (add-hook 'elm-mode-hook #'lsp)
+  (add-hook 'elm-mode-hook 'elm-format-on-save-mode))
 
 (provide 'init)
 ;;; init.el ends here
