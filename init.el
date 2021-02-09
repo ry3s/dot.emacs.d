@@ -97,7 +97,6 @@
 (set-fontset-font "fontset-default"
                   'katakana-jisx0201
                   '("Hiragino Kaku Gothic ProN"))
-
 (setq default-frame-alist '((width . 120) (height . 53)))
 (setq mouse-drag-copy-region t)
 ;; スタートアップメッセージを表示しない
@@ -259,11 +258,7 @@
   :config
   (dashboard-setup-startup-hook))
 
-;; ## added by OPAM user-setup for emacs / base ## 56ab50dc8996d2bb95e7856a6eddb17b ## you can edit, but keep this line
-(require 'opam-user-setup "~/.emacs.d/opam-user-setup.el")
-;; ## end of OPAM user-setup addition for emacs / base ## keep this line
-
-(require 'ocamlformat)
+(use-package ocamlformat)
 (use-package tuareg
   :mode
   ("\\.ml\\'" . tuareg-mode)
@@ -304,10 +299,6 @@
 (use-package magit
   :config (global-set-key (kbd "C-x g") 'magit-status))
 
-(use-package nasm-mode
-  :config
-  (add-hook 'asm-mode-hook 'nasm-mode))
-
 (use-package yaml-mode
   :config
   (add-to-list 'auto-mode-alist '("\\.ya?ml$" . yaml-mode))
@@ -331,12 +322,16 @@
   (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
 
+(add-hook 'js-mode-hook
+          (lambda ()
+            (make-local-variable 'js-indent-level)
+            (setq js-indent-level 2)))
 (use-package json-mode
   :config
   (add-hook 'js-mode-hook
             (lambda ()
               (make-local-variable 'js-indent-level)
-              (setq js-indent-level 4))))
+              (setq js-indent-level 2))))
 
 (use-package go-mode
   :config
