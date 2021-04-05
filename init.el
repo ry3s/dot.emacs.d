@@ -38,6 +38,7 @@
   (setq company-dabbrev-downcase nil)
   (setq completion-ignore-case t)
   (setq company-idle-delay 0)
+  (setq company-minimum-prefix-length 3)
   (define-key emacs-lisp-mode-map (kbd "C-M-i") 'company-complete)
   (defun edit-category-table-for-company-dabbrev (&optional table)
     (define-category ?s "word constituents for company-dabbrev" table)
@@ -50,7 +51,6 @@
   (edit-category-table-for-company-dabbrev)
   (setq company-dabbrev-char-regexp "\\cs")
   ;; すべてのバッファで有効にする
-  ;; (setq company-minimum-prefix-length 2)
   (global-company-mode))
 
 ;; Company front-end with icons
@@ -193,14 +193,13 @@
 (use-package projectile
   :config
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-  ;; (projectile-mode t)
-  )
+  (projectile-mode t))
 (use-package counsel-projectile
   :config
   (setq projectile-completion-system 'ivy)
   (counsel-projectile-mode 1))
 
-;; irony (for C++)
+;; irony (C++)
 (use-package irony
   :init
   (add-hook 'c++-mode-hook 'irony-mode)
@@ -208,16 +207,15 @@
   ;; C++言語用にコンパイルオプションを設定する.
   (add-hook 'c++-mode-hook
             (lambda ()
-              (setq irony-additional-clang-options '("-std=c++14" "-Wall" "-Wextra"))))
-  (add-hook 'c++mode-hook
-            (lambda ()
-              (setq flycheck-clang-include-path
-                    (list ("/opt/local/include")))))
-  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-cmpile-options))
+              (setq irony-additional-clang-options
+                    '("-std=c++17" "-Wall" "-Wextra"
+                      "-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"))))
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+
 (use-package company-irony
   :config
-  ;; companyの補完のバックエンドにironyを使用する.
-  (add-to-list 'company-backends '(company-irony-c-headers company-irony)))
+  (add-to-list 'company-backends 'company-irony))
+
 ;; cc mode settings
 (use-package cc-mode
   :init
@@ -236,11 +234,17 @@
   (setq rustic-lsp-server 'rustic-analyzer))
 
 ;; Haskell
-(use-package lsp-haskell
-  :config
-  (add-hook 'haskell-mode-hook #'lsp)
-  (setq haskell-stylish-on-save t)
-  (setq lsp-haskell-process-path-hie "haskell-language-server-wrapper"))
+(use-package dante
+  :after haskell-mode
+  :commands 'dante-mode
+  :init
+  (add-hook 'haskell-mode-hook 'flycheck-mode)
+  (add-hook 'haskell-mode-hook 'dante-mode))
+;; (use-package lsp-haskell
+;;   :config
+;;   (add-hook 'haskell-mode-hook #'lsp)
+;;   (setq haskell-stylish-on-save t)
+;;   (setq lsp-haskell-process-path-hie "haskell-language-server-wrapper"))
 
 ;; yasnippet
 (use-package yasnippet
@@ -284,8 +288,8 @@
   :diminish which-key-mode
   :hook (after-init . which-key-mode))
 
-(use-package lsp-java
-  :config (add-hook 'java-mode-hook #'lsp))
+;; (use-package lsp-java
+;;   :config (add-hook 'java-mode-hook #'lsp))
 
 (use-package elpy
   :init
