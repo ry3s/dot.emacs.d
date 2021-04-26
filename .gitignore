@@ -66,3 +66,4 @@ irony
 .dap-breakpoints
 .cache
 workspace
+custom.el
