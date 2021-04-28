@@ -27,7 +27,8 @@
 (leaf cus-start
   :doc "define customization properties of builtins"
   :tag "builtin" "internal"
-  :custom '((menu-bar-mode . t)
+  :custom '(;; Appearance
+            (menu-bar-mode . t)
             (tool-bar-mode . nil)
             (scroll-bar-mode . nil)
 	        (blink-cursor-mode . nil) ; カーソルの点滅をやめる
@@ -59,8 +60,7 @@
             (recentf-max-saved-items . 200))
   :config
   (defalias 'yes-or-no-p 'y-or-n-p)
-  ;; 自動で空白を削除
-  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+  (add-hook 'before-save-hook 'delete-trailing-whitespace) ; 自動で空白を削除
   (global-set-key (kbd "C-x C-b") 'buffer-menu)
   (global-set-key (kbd "C-h") 'delete-backward-char)
   (when (eq window-system 'ns)
@@ -77,8 +77,7 @@
   :ensure t
   :config (exec-path-from-shell-initialize))
 
-;; ;; Font
-;; (set-face-attribute 'fixed-pitch nil :family "Monaco")
+;; Font
 (set-face-attribute 'default nil :family "Monaco" :height 130)
 (set-fontset-font "fontset-default"
                   'japanese-jisx0208
@@ -136,12 +135,15 @@
   :ensure t
   :blackout ivy-mode
   :global-minor-mode t
-  :custom '((ivy-use-virtual-buffers . t))
+  :custom '((ivy-use-virtual-buffers . t)
+            (ivy-format-functions-alist . '((t . ivy-format-function-arrow))))
   :config
   (leaf swiper
     :ensure t
     :bind ("C-x s" . swiper))
-  (leaf counsel :ensure t
+  (leaf counsel
+    :ensure t
+    :global-minor-mode t
     :config
     (global-set-key (kbd "C-c r") 'counsel-recentf))
   (leaf all-the-icons-ivy-rich
@@ -149,8 +151,9 @@
     :global-minor-mode t)
   (leaf ivy-rich
     :ensure t
-    :global-minor-mode t
-    :custom (ivy-format-function-alist . '((t . ivy-format-function-arrow)))))
+    :global-minor-mode t))
+
+;; (setq ivy-format-functions-alist '((t . ivy-format-function-arrow)))
 
 (leaf dashboard
   :ensure t
@@ -191,6 +194,7 @@
           ("C-x i l" . yas-describe-tables)
           ("C-x i g" . yas-reload-all)))
   :global-minor-mode yas-global-mode
+  :config
   (leaf yasnippet-snippets :ensure t))
 
 (leaf lsp-mode
@@ -205,6 +209,7 @@
 
 (leaf irony
   :ensure t
+  :custom (irony-additional-clang-options . '("-std=c++17" "-Wall" "-Wextra"))
   :config
   (add-hook 'c++-mode-hook 'irony-mode)
   (add-hook 'c-mode-hook 'irony-mode)
@@ -214,17 +219,6 @@
     :ensure t
     :config
     (add-to-list 'company-backends 'company-irony)))
-;; ;; (use-package irony
-;; ;;   :init
-;; ;;   (add-hook 'c++-mode-hook 'irony-mode)
-;; ;;   (add-hook 'c-mode-hook 'irony-mode)
-;; ;;   ;; C++言語用にコンパイルオプションを設定する.
-;; ;;   (add-hook 'c++-mode-hook
-;; ;;             (lambda ()
-;; ;;               (setq irony-additional-clang-options
-;; ;;                     '("-std=c++17" "-Wall" "-Wextra"
-;; ;;                       "-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"))))
-;; ;;
 
 (leaf rustic
   :ensure t
@@ -242,14 +236,13 @@
   :ensure t
   :mode ("\\.ml\\'")
   :config
-  (leaf ocamlformat :ensure t)
+  (leaf ocamlformat
+    :ensure t
+    :custom '(ocamlformat-enable . 'enable-outside-detected-project)
+    :hook (before-save-hook . ocamlformat-before-save))
   (leaf merlin
     :ensure t
-    :hook (tuareg-mode-hook))
-  (with-eval-after-load 'tuareg
-    (add-hook 'tuareg-mode-hook
-              (lambda nil
-                (add-hook 'before-save-hook #'ocamlformat-before-save)))))
+    :hook (tuareg-mode-hook)))
 
 (leaf markdown-mode
   :ensure t
