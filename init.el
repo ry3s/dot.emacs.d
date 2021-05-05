@@ -63,15 +63,9 @@
   (add-hook 'before-save-hook 'delete-trailing-whitespace) ; 自動で空白を削除
   (global-set-key (kbd "C-x C-b") 'buffer-menu)
   (global-set-key (kbd "C-h") 'delete-backward-char)
-  (when (eq window-system 'ns)
-    (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-    (add-to-list 'default-frame-alist '(ns-appearance . dark)))
   (setq default-frame-alist '((width . 120) (height . 53)))
   (set-language-environment "Japanese")
-  (prefer-coding-system 'utf-8)
-  (set-default-coding-systems 'utf-8)
-  (set-terminal-coding-system 'utf-8)
-  (set-selection-coding-system 'utf-8))
+  (prefer-coding-system 'utf-8))
 
 (leaf exec-path-from-shell
   :ensure t
@@ -79,6 +73,7 @@
 
 ;; Font
 (set-face-attribute 'default nil :family "Monaco" :height 130)
+
 (set-fontset-font "fontset-default"
                   'japanese-jisx0208
                   '("Hiragino Kaku Gothic ProN"))
@@ -103,6 +98,7 @@
 (leaf company
   :ensure t
   :blackout t
+  :global-minor-mode global-company-mode
   :bind ((company-active-map
           ("M-n" . nil)
           ("M-p" . nil)
@@ -128,8 +124,7 @@
   (leaf company-box
     :ensure t
     :blackout company-box-mode
-    :hook (company-mode . company-box-mode))
-  :global-minor-mode global-company-mode)
+    :hook (company-mode . company-box-mode)))
 
 (leaf ivy
   :ensure t
@@ -143,6 +138,7 @@
     :bind ("C-x s" . swiper))
   (leaf counsel
     :ensure t
+    :blackout counsel-mode
     :global-minor-mode t
     :config
     (global-set-key (kbd "C-c r") 'counsel-recentf))
@@ -152,8 +148,6 @@
   (leaf ivy-rich
     :ensure t
     :global-minor-mode t))
-
-;; (setq ivy-format-functions-alist '((t . ivy-format-function-arrow)))
 
 (leaf dashboard
   :ensure t
@@ -235,6 +229,7 @@
 (leaf tuareg
   :ensure t
   :mode ("\\.ml\\'")
+  :custom ((tuareg-match-clause-indent . 2))
   :config
   (leaf ocamlformat
     :ensure t
@@ -260,6 +255,9 @@
   (when (load "flycheck" t t)
     (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
     (add-hook 'elpy-mode-hook 'flycheck-mode)))
+
+(leaf tex-mode
+  :custom ((tex-fontify-script . nil)))
 
 (leaf yaml-mode
   :ensure t
