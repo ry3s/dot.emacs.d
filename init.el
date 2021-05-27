@@ -203,16 +203,28 @@
 
 (leaf irony
   :ensure t
-  :custom (irony-additional-clang-options . '("-std=c++17" "-Wall" "-Wextra"))
+  :custom (irony-additional-clang-options
+           . '("-std=c++17" "-Wall" "-Wextra"
+               "-I/usr/local/include"
+               "-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1"
+               "-I/Library/Developer/CommandLineTools/usr/lib/clang/12.0.5/include"
+               "-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include"
+               "-I/Library/Developer/CommandLineTools/usr/include"))
   :config
   (add-hook 'c++-mode-hook 'irony-mode)
   (add-hook 'c-mode-hook 'irony-mode)
   (add-hook 'objc-mode-hook 'irony-mode)
   (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+  (leaf flycheck-irony
+    :ensure t
+    :config
+    (eval-after-load 'flycheck
+      '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup)))
   (leaf company-irony
     :ensure t
     :config
-    (add-to-list 'company-backends 'company-irony)))
+    (eval-after-load 'company
+      '(add-to-list 'company-backends 'company-irony))))
 
 (leaf rustic
   :ensure t
