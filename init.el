@@ -84,7 +84,10 @@
 (leaf doom-themes
   :ensure t
   :config
-  (load-theme 'doom-one t))
+  (load-theme 'doom-nord t)
+  (leaf doom-modeline
+    :ensure t
+    :init (doom-modeline-mode 1)))
 
 (leaf redo+
   :ensure
@@ -199,7 +202,9 @@
 (leaf cc-mode
   :mode-hook
   (c-mode-hook . ((c-set-style "k&r")
-                  (setq c-basic-offset 4))))
+                  (setq c-basic-offset 4)))
+  (c++-mode-hook . ((setq c-default-style "k&r")
+                    (setq c-basic-offset 4))))
 
 (leaf irony
   :ensure t
