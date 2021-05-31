@@ -231,9 +231,7 @@
     (eval-after-load 'company
       '(add-to-list 'company-backends 'company-irony))))
 
-(leaf rustic
-  :ensure t
-  :custom '((rustic-lsp-server . 'rustic-analyzer)))
+(leaf rustic :ensure t)
 
 (leaf dante
   :ensure t
