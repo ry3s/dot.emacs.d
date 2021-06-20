@@ -251,8 +251,8 @@
     :custom '(ocamlformat-enable . 'enable-outside-detected-project)
     :hook (before-save-hook . ocamlformat-before-save))
   (leaf merlin
-    :ensure t
-    :hook (tuareg-mode-hook)))
+    :config
+    (add-hook 'tuareg-mode-hook #'merlin-mode)))
 
 (leaf markdown-mode
   :ensure t
@@ -270,9 +270,6 @@
   (when (load "flycheck" t t)
     (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
     (add-hook 'elpy-mode-hook 'flycheck-mode)))
-
-(leaf tex-mode
-  :custom ((tex-fontify-script . nil)))
 
 (leaf yaml-mode
   :ensure t
@@ -307,6 +304,14 @@
   :ensure t
   :hook ((elm-mode-hook . lsp)
          (elm-mode-hook . elm-format-on-save-mode)))
+
+(leaf tex-mode
+  :custom ((tex-fontify-script . nil))
+  :config
+  (leaf ispell
+    :config
+    (setq ispell-program-name "/usr/local/bin/aspell")
+    (add-to-list 'ispell-skip-region-alist '("[^\000-\377]+"))))
 
 (defun swap-screen ()
   "Swap two screen, leaving cursor at current window."
