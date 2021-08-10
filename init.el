@@ -84,10 +84,10 @@
 ;; (leaf doom-themes
 ;;   :ensure t
 ;;   :config
-;;   (load-theme 'doom-nord t)
-;;   (leaf doom-modeline
-;;     :ensure t
-;;     :init (doom-modeline-mode 1)))
+;;   (load-theme 'doom-nord t))
+(leaf doom-modeline
+  :ensure t
+  :init (doom-modeline-mode 1))
 
 (leaf modus-themes
   :ensure t
