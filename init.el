@@ -81,22 +81,22 @@
                   'katakana-jisx0201
                   '("Hiragino Kaku Gothic ProN"))
 
-;; (leaf doom-themes
-;;   :ensure t
-;;   :config
-;;   (load-theme 'doom-nord t))
+(leaf doom-themes
+  :ensure t
+  :config
+  (load-theme 'doom-nord t))
 (leaf doom-modeline
   :ensure t
   :init (doom-modeline-mode 1))
 
-(leaf modus-themes
-  :ensure t
-  :custom ((modus-themes-italic-constructs . nil)
-           (modus-themes-bold-constructs . nil)
-           (modus-themes-region . '(bg-only no-extend)))
-  :config
-  (modus-themes-load-themes)
-  (modus-themes-load-vivendi))
+;; (leaf modus-themes
+;;   :ensure t
+;;   :custom ((modus-themes-italic-constructs . nil)
+;;            (modus-themes-bold-constructs . nil)
+;;            (modus-themes-region . '(bg-only no-extend)))
+;;   :config
+;;   (modus-themes-load-themes)
+;;   (modus-themes-load-vivendi))
 
 (leaf redo+
   :ensure
