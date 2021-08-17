@@ -84,19 +84,11 @@
 (leaf doom-themes
   :ensure t
   :config
-  (load-theme 'doom-nord t))
-(leaf doom-modeline
-  :ensure t
-  :init (doom-modeline-mode 1))
-
-;; (leaf modus-themes
-;;   :ensure t
-;;   :custom ((modus-themes-italic-constructs . nil)
-;;            (modus-themes-bold-constructs . nil)
-;;            (modus-themes-region . '(bg-only no-extend)))
-;;   :config
-;;   (modus-themes-load-themes)
-;;   (modus-themes-load-vivendi))
+  (load-theme 'doom-one t)
+  :config
+  (leaf doom-modeline
+    :ensure t
+    :init (doom-modeline-mode 1)))
 
 (leaf redo+
   :ensure
@@ -138,26 +130,37 @@
     :blackout company-box-mode
     :hook (company-mode . company-box-mode)))
 
-(leaf ivy
+;; (leaf ivy
+;;   :ensure t
+;;   :blackout ivy-mode
+;;   :global-minor-mode t
+;;   :custom '((ivy-use-virtual-buffers . t)
+;;             (ivy-format-functions-alist . '((t . ivy-format-function-arrow))))
+;;   :config
+;;   (leaf swiper
+;;     :ensure t
+;;     :bind ("C-x s" . swiper))
+;;   (leaf counsel
+;;     :ensure t
+;;     :blackout counsel-mode
+;;     :global-minor-mode t
+;;     :config
+;;     (global-set-key (kbd "C-c r") 'counsel-recentf))
+;;   (leaf all-the-icons-ivy-rich
+;;     :ensure t
+;;     :global-minor-mode t)
+;;   (leaf ivy-rich
+;;     :ensure t
+;;     :global-minor-mode t))
+
+(leaf vertico
   :ensure t
-  :blackout ivy-mode
   :global-minor-mode t
-  :custom '((ivy-use-virtual-buffers . t)
-            (ivy-format-functions-alist . '((t . ivy-format-function-arrow))))
   :config
-  (leaf swiper
+  (leaf orderless
     :ensure t
-    :bind ("C-x s" . swiper))
-  (leaf counsel
-    :ensure t
-    :blackout counsel-mode
-    :global-minor-mode t
-    :config
-    (global-set-key (kbd "C-c r") 'counsel-recentf))
-  (leaf all-the-icons-ivy-rich
-    :ensure t
-    :global-minor-mode t)
-  (leaf ivy-rich
+    :custom ((completion-styles . '(orderless))))
+  (leaf marginalia
     :ensure t
     :global-minor-mode t))
 
@@ -184,11 +187,6 @@
   :global-minor-mode t
   :bind ((projectile-mode-map
           ("C-c p" . projectile-command-map))))
-
-(leaf counsel-projectile
-  :ensure t
-  :custom '((projectile-completion-system . 'ivy))
-  :global-minor-mode t)
 
 (leaf yasnippet
   :ensure t
