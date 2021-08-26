@@ -318,9 +318,14 @@
 (leaf tex-mode
   :custom ((tex-fontify-script . nil))
   :config
+  (leaf reftex
+    :hook (tex-mode . reftex-mode))
+  (leaf flyspell
+    :ensure t
+    :hook (yatex-mode . flyspell-mode))
   (leaf ispell
+    :custom ((ispell-program-name . "/usr/local/bin/aspell"))
     :config
-    (setq ispell-program-name "/usr/local/bin/aspell")
     (add-to-list 'ispell-skip-region-alist '("[^\000-\377]+"))))
 
 (defun swap-screen ()
