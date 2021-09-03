@@ -130,29 +130,6 @@
     :blackout company-box-mode
     :hook (company-mode . company-box-mode)))
 
-;; (leaf ivy
-;;   :ensure t
-;;   :blackout ivy-mode
-;;   :global-minor-mode t
-;;   :custom '((ivy-use-virtual-buffers . t)
-;;             (ivy-format-functions-alist . '((t . ivy-format-function-arrow))))
-;;   :config
-;;   (leaf swiper
-;;     :ensure t
-;;     :bind ("C-x s" . swiper))
-;;   (leaf counsel
-;;     :ensure t
-;;     :blackout counsel-mode
-;;     :global-minor-mode t
-;;     :config
-;;     (global-set-key (kbd "C-c r") 'counsel-recentf))
-;;   (leaf all-the-icons-ivy-rich
-;;     :ensure t
-;;     :global-minor-mode t)
-;;   (leaf ivy-rich
-;;     :ensure t
-;;     :global-minor-mode t))
-
 (leaf vertico
   :ensure t
   :global-minor-mode t
@@ -162,7 +139,9 @@
     :custom ((completion-styles . '(orderless))))
   (leaf marginalia
     :ensure t
-    :global-minor-mode t))
+    :global-minor-mode t)
+  (leaf consult
+    :ensure t))
 
 (leaf dashboard
   :ensure t
@@ -191,12 +170,6 @@
 (leaf yasnippet
   :ensure t
   :blackout
-  :bind ((yas-minor-mode-map
-          ("C-x i i" . yas-insert-snippet)
-          ("C-x i n" . yas-new-snippet)
-          ("C-x i v" . yas-visit-snippet-file)
-          ("C-x i l" . yas-describe-tables)
-          ("C-x i g" . yas-reload-all)))
   :global-minor-mode yas-global-mode
   :config
   (leaf yasnippet-snippets :ensure t))
@@ -204,7 +177,9 @@
 (leaf lsp-mode
   :custom  '((lsp-completion-provider . :capf))
   :config
-  (leaf lsp-ui :ensure t))
+  (leaf lsp-ui
+    :ensure t
+    :custom ((lsp-ui-doc-enable . nil))))
 
 (leaf cc-mode
   :mode-hook
@@ -268,8 +243,7 @@
   :ensure t
   :mode (("README\\.md\\'" . gfm-mode)
          "\\.md\\'" "\\.markdown\\'")
-  :custom '((markdown-command . "multimarkdown")
-            (markdown-fontify-code-blocks-natively . nil)))
+  :custom '((markdown-fontify-code-blocks-natively . nil)))
 
 (leaf elpy
   :ensure t
@@ -322,7 +296,7 @@
     :hook (tex-mode . reftex-mode))
   (leaf flyspell
     :ensure t
-    :hook (yatex-mode . flyspell-mode))
+    :hook (tex-mode . flyspell-mode))
   (leaf ispell
     :custom ((ispell-program-name . "/usr/local/bin/aspell"))
     :config
