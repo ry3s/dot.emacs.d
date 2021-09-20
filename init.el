@@ -50,6 +50,7 @@
 	        (electric-pair-delete-adjacent-pairs . nil) ; BSしたときに対応する閉じカッコを消さない
 	        (require-final-newline . t)
 	        ;; etc
+            (fill-column . 100)
 	        (mac-option-modifier . 'meta)
 	        (make-backup-files . nil) ; バックアップファイルを作らない
 	        (delete-auto-save-files . t) ; 終了時にオートセーブファイルを削除
@@ -63,6 +64,7 @@
   (add-hook 'before-save-hook 'delete-trailing-whitespace) ; 自動で空白を削除
   (global-set-key (kbd "C-x C-b") 'buffer-menu)
   (global-set-key (kbd "C-h") 'delete-backward-char)
+  (global-display-fill-column-indicator-mode)
   (setq default-frame-alist '((width . 120) (height . 53)))
   (set-language-environment "Japanese")
   (prefer-coding-system 'utf-8))
@@ -113,18 +115,18 @@
             (company-minimum-prefix-length . 3)
             (company-dabbrev-downcase . nil) ; case sensitive に補完
             (completion-ignore-case . t)
-            (company-dabbrev-char-regexp . "\\cs")
+            (company-dabbrev-char-regexp . "\\ca")
             (company-transformers . '(company-sort-by-backend-importance)))
   :config
-  (defun edit-category-table-for-company-dabbrev (&optional table)
-    (define-category ?s "word constituents for company-dabbrev" table)
-    (let ((i 0))
-      (while (< i 128)
-        (if (equal ?w (char-syntax i))
-            (modify-category-entry i ?s table)
-          (modify-category-entry i ?s table t))
-        (setq i (1+ i)))))
-  (edit-category-table-for-company-dabbrev)
+  ;; (defun edit-category-table-for-company-dabbrev (&optional table)
+  ;;   (define-category ?s "word constituents for company-dabbrev" table)
+  ;;   (let ((i 0))
+  ;;     (while (< i 128)
+  ;;       (if (equal ?w (char-syntax i))
+  ;;           (modify-category-entry i ?s table)
+  ;;         (modify-category-entry i ?s table t))
+  ;;       (setq i (1+ i)))))
+  ;; (edit-category-table-for-company-dabbrev)
   (leaf company-box
     :ensure t
     :blackout company-box-mode
@@ -233,8 +235,8 @@
     :custom '(ocamlformat-enable . 'enable-outside-detected-project)
     :hook (before-save-hook . ocamlformat-before-save))
   (leaf merlin
-    :config
-    (add-hook 'tuareg-mode-hook #'merlin-mode)))
+    :ensure t
+    :hook (tuareg-mode-hook . merlin-mode)))
 
 (leaf sml-mode
   :ensure t)
@@ -276,13 +278,17 @@
 (leaf go-mode
   :ensure t
   :hook ((go-mode-hook . lsp))
+  :custom ((indent-tabs-mode . t)
+           (tab-width . 4))
   :config
-  (add-hook 'go-mode-hook
-            (lambda nil
-              (setq indent-tabs-mode t)
-              (setq tab-width 4)
-              (add-hook 'before-save-hook #'lsp-format-buffer t t)
-              (add-hook 'before-save-hook #'lsp-organize-imports t t))))
+  (add-hook 'go-mode-hook 'gofmt-before-save)
+  ;; (add-hook 'go-mode-hook
+  ;;           (lambda nil
+  ;;             (setq indent-tabs-mode t)
+  ;;             (setq tab-width 4)
+  ;;             (add-hook 'before-save-hook #'lsp-format-buffer)
+  ;;             (add-hook 'before-save-hook #'lsp-organize-imports)))
+  )
 
 (leaf elm-mode
   :ensure t
@@ -293,23 +299,14 @@
   :custom ((tex-fontify-script . nil))
   :config
   (leaf reftex
-    :hook (tex-mode . reftex-mode))
+    :hook (latex-mode-hook . reftex-mode))
   (leaf flyspell
     :ensure t
-    :hook (tex-mode . flyspell-mode))
+    :hook (latex-mode-hook . flyspell-mode))
   (leaf ispell
     :custom ((ispell-program-name . "/usr/local/bin/aspell"))
     :config
     (add-to-list 'ispell-skip-region-alist '("[^\000-\377]+"))))
 
-(defun swap-screen ()
-  "Swap two screen, leaving cursor at current window."
-  (interactive)
-  (let ((thiswin (selected-window))
-        (nextbuf (window-buffer (next-window))))
-    (set-window-buffer (next-window) (window-buffer))
-    (set-window-buffer thiswin nextbuf)))
-(global-set-key [f2] 'swap-screen)
-
 (provide 'init)
-;;; init.el ends here
+;;; init ends here
