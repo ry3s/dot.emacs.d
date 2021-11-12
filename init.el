@@ -20,10 +20,7 @@
 
 (leaf cus-edit
   :doc "tools for customizing Emacs and Lisp packages"
-  :custom `((custom-file . ,(locate-user-emacs-file "custom.el")))
-  :hook (kill-emacs-hook . (lambda ()
-							 (if (file-exists-p custom-file)
-								 (delete-file custom-file)))))
+  :custom `((custom-file . ,(locate-user-emacs-file "custom.el"))))
 
 (leaf cus-start
   :doc "define customization properties of builtins"
@@ -42,27 +39,33 @@
   (scroll-preserve-screen-position . 'always)
   (indent-tabs-mode . nil)
   (tab-always-indent . t)
-  (tab-width . 4)
   (require-final-newline . t)
   (fill-column . 100)
   (mac-option-modifier . 'meta)
   (make-backup-files . nil) ; バックアップファイルを作らない
   (delete-auto-save-files . t) ; 終了時にオートセーブファイルを削除
-  (confirm-kill-emacs . 'y-or-n-p) ; C-x C-c で容易にEmacsを終了させないように質問する
+  (confirm-kill-emacs . 'y-or-n-p)
   (bidi-display-reordering . nil) ; 右から左に読む言語に対応させないことで描画高速化
   (dired-listing-switches . "-alh") ; dired kb表示
   (recentf-save-file . "~/.emacs.d/recentf")
   (recentf-max-saved-items . 200)
   :config
+  (global-display-fill-column-indicator-mode)
   (defalias 'yes-or-no-p 'y-or-n-p)
   (add-hook 'before-save-hook 'delete-trailing-whitespace) ; 自動で空白を削除
   (global-set-key (kbd "C-x C-b") 'buffer-menu)
   (global-set-key (kbd "C-h") 'delete-backward-char)
-  (global-display-fill-column-indicator-mode)
-  (setq default-frame-alist '((width . 110) (height . 53)))
   (set-language-environment "Japanese")
   (prefer-coding-system 'utf-8)
+  (setq default-frame-alist '((width . 110) (height . 53)))
   (set-face-attribute 'default nil :family "Monaco" :height 130))
+
+(leaf whitespace
+  :defvar whitespace-style
+  :config
+  (setq whitespace-style '(face trailing tabs space-before-tab
+                                indentation space-after-tab))
+  (global-whitespace-mode 1))
 
 (leaf exec-path-from-shell
   :ensure t
@@ -91,6 +94,8 @@
 (leaf company
   :ensure t
   :global-minor-mode global-company-mode
+  :defun edit-category-table-for-company-dabbrev
+  :defvar company-dabbrev-char-regexp
   :bind ((company-active-map
           ("M-n" . nil)
           ("M-p" . nil)
@@ -142,11 +147,11 @@
 
 (leaf neotree
   :ensure t
-  :bind (([f8] . neotree-toggle)))
+  :bind ([f8] . neotree-toggle))
 
 (leaf magit
   :ensure t
-  :bind (("C-c g" . magit-status)))
+  :bind ("C-c g" . magit-status))
 
 (leaf projectile
   :ensure t
@@ -159,38 +164,26 @@
   :config
   (leaf lsp-ui
     :ensure t
-    :custom ((lsp-ui-doc-enable . nil))))
+    :custom (lsp-ui-doc-enable . nil)))
+
+(leaf yasnippet
+  :ensure t
+  :init (yas-global-mode 1))
+
 
 (leaf cc-mode
-  :mode-hook
-  (c-mode-hook . ((c-set-style "k&r")
-                  (setq c-basic-offset 4)))
-  (c++-mode-hook . ((setq c-default-style "k&r")
-                    (setq c-basic-offset 4))))
-
-(leaf irony
-  :ensure t
-  :custom (irony-additional-clang-options
-           . '("-std=c++17" "-Wall" "-Wextra"
-               "-I/usr/local/include"
-               "-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1"
-               "-I/Library/Developer/CommandLineTools/usr/lib/clang/12.0.5/include"
-               "-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include"
-               "-I/Library/Developer/CommandLineTools/usr/include"))
-  :config
-  (add-hook 'c++-mode-hook 'irony-mode)
-  (add-hook 'c-mode-hook 'irony-mode)
-  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
-  (leaf flycheck-irony
-    :ensure t
-    :config
-    (eval-after-load 'flycheck
-      '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup)))
-  (leaf company-irony
-    :ensure t
-    :config
-    (eval-after-load 'company
-      '(add-to-list 'company-backends 'company-irony))))
+  :defvar (c-basic-offset)
+  :hook
+  (c-mode-hook . (lambda ()
+                   (c-set-style "k&r")
+                   (setq c-basic-offset 4)
+                   (setq indent-tabs-mode nil)
+                   (lsp)))
+  (c++-mode-hook . (lambda ()
+                     (c-set-style "k&r")
+                     (setq c-basic-offset 4)
+                     (setq indent-tabs-mode  nil)
+                     (lsp))))
 
 (leaf rustic :ensure t)
 
@@ -235,6 +228,7 @@
 
 (leaf json-mode
   :ensure t
+  :defvar (js-indent-level)
   :config
   (add-hook 'js-mode-hook
             (lambda ()
@@ -243,10 +237,10 @@
 
 (leaf go-mode
   :ensure t
-  :hook (go-mode-hook . lsp)
-  :custom
-  (indent-tabs-mode . t)
-  (tab-width . 4)
+  :hook (go-mode-hook . (lambda ()
+                          (setq indent-tabs-mode t)
+                          (setq tab-width 4)
+                          (lsp)))
   :config
   (add-hook 'go-mode-hook 'gofmt-before-save))
 
