@@ -19,11 +19,9 @@
     (leaf-keywords-init)))
 
 (leaf cus-edit
-  :doc "tools for customizing Emacs and Lisp packages"
   :custom `((custom-file . ,(locate-user-emacs-file "custom.el"))))
 
 (leaf cus-start
-  :doc "define customization properties of builtins"
   :custom
   (tool-bar-mode . nil)
   (scroll-bar-mode . nil)
@@ -36,6 +34,8 @@
   (show-paren-mode . t) ; 対応するカッコ
   (electric-pair-mode . t) ; カッコの自動対応
   (electric-pair-delete-adjacent-pairs . nil) ; BSしたときに対応する閉じカッコを消さない
+  (scroll-conservatively . 1) ; スクロールを一行ずつ
+  (scroll-step . 1)
   (scroll-preserve-screen-position . 'always)
   (indent-tabs-mode . nil)
   (tab-always-indent . t)
@@ -51,14 +51,16 @@
   (recentf-max-saved-items . 200)
   :config
   (global-display-fill-column-indicator-mode)
+  (global-auto-revert-mode)
   (defalias 'yes-or-no-p 'y-or-n-p)
   (add-hook 'before-save-hook 'delete-trailing-whitespace) ; 自動で空白を削除
-  (global-set-key (kbd "C-x C-b") 'buffer-menu)
+  (global-set-key (kbd "C-x C-b") 'ibuffer)
   (global-set-key (kbd "C-h") 'delete-backward-char)
   (set-language-environment "Japanese")
   (prefer-coding-system 'utf-8)
-  (setq default-frame-alist '((width . 110) (height . 53)))
-  (set-face-attribute 'default nil :family "Monaco" :height 130))
+  (setq-default tab-width 4)
+  (set-face-attribute 'default nil :family "Monaco" :height 130)
+  (set-face-italic 'italic nil))
 
 (leaf whitespace
   :defvar whitespace-style
@@ -69,14 +71,13 @@
 
 (leaf exec-path-from-shell
   :ensure t
-  :if (memq window-system '(mac ns x))
+  :when (memq window-system '(mac ns x))
   :config (exec-path-from-shell-initialize))
 
 (leaf doom-themes
   :ensure t
   :config
   (load-theme 'doom-one t)
-  :config
   (leaf doom-modeline
     :ensure t
     :init (doom-modeline-mode 1)))
@@ -105,7 +106,7 @@
   :custom
   (company-idle-delay . 0)
   (company-minimum-prefix-length . 3)
-  (company-dabbrev-downcase . nil) ; case sensitive に補完
+  (company-dabbrev-downcase . nil)
   (completion-ignore-case . t)
   (company-transformers . '(company-sort-by-backend-importance))
   :config
@@ -118,10 +119,7 @@
           (modify-category-entry i ?s table t))
         (setq i (1+ i)))))
   (edit-category-table-for-company-dabbrev)
-  (setq company-dabbrev-char-regexp "\\cs")
-  (leaf company-box
-    :ensure t
-    :hook (company-mode . company-box-mode)))
+  (setq company-dabbrev-char-regexp "\\cs"))
 
 (leaf vertico
   :ensure t
@@ -145,10 +143,6 @@
   :ensure t
   :hook (after-init-hook))
 
-(leaf neotree
-  :ensure t
-  :bind ([f8] . neotree-toggle))
-
 (leaf magit
   :ensure t
   :bind ("C-c g" . magit-status))
@@ -156,8 +150,7 @@
 (leaf projectile
   :ensure t
   :global-minor-mode t
-  :bind ((projectile-mode-map
-          ("C-c p" . projectile-command-map))))
+  :bind ((projectile-mode-map ("C-c p" . projectile-command-map))))
 
 (leaf lsp-mode
   :custom  '((lsp-completion-provider . :capf))
@@ -169,7 +162,6 @@
 (leaf yasnippet
   :ensure t
   :init (yas-global-mode 1))
-
 
 (leaf cc-mode
   :defvar (c-basic-offset)
@@ -206,7 +198,15 @@
     :hook (before-save-hook . ocamlformat-before-save))
   (leaf merlin
     :ensure t
-    :hook (tuareg-mode-hook . merlin-mode)))
+    :hook (tuareg-mode-hook . merlin-mode))
+  (leaf merlin-eldoc
+    :ensure t
+    :custom
+    (eldoc-echo-area-use-multiline-p . t)
+    (merlin-eldoc-max-lines . 3)
+    (merlin-eldoc-type-verbosity . 'min)
+    (merlin-eldoc-doc . nil)
+    :hook (tuareg-mode-hook . merlin-eldoc-setup)))
 
 (leaf markdown-mode
   :ensure t
@@ -258,7 +258,7 @@
     :ensure t
     :hook (latex-mode-hook . flyspell-mode))
   (leaf ispell
-    :custom (ispell-program-name . "/usr/local/bin/aspell")
+    :custom (ispell-program-name . "/opt/homebrew/bin/aspell")
     :config
     (add-to-list 'ispell-skip-region-alist '("[^\000-\377]+"))))
 
